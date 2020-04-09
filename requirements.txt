@@ -1,0 +1,15 @@
+autopep8
+Flask
+Flask-Migrate
+Flask-RESTful
+Flask-Script
+Flask-SQLAlchemy
+Flask-WTF
+gunicorn
+pylint
+PyMySQL
+python-dotenv
+redis
+requests
+rq
+six
