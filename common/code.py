@@ -20,8 +20,3 @@ CODE_MSG_MAP = {
     UNKNOWN_ERROR: 'unknown error'
 }
 
-FLASH_PRIMARY = 'primary'
-FLASH_SUCCESS = 'success'
-FLASH_INFO = 'info'
-FLASH_WARNING = 'warning'
-FLASH_DANGER: 'danger'
