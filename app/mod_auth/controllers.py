@@ -1,11 +1,12 @@
 """
 Auth Module's Controllers
 """
-from flask import Blueprint, flash, render_template, request
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
 from app.mod_auth.forms import LoginForm
+from app.mod_auth.models import Staff
 
-from common import code
+from common import code, flash_code
 
 MOD_AUTH = Blueprint('auth', __name__, url_prefix='/')
 
@@ -15,7 +16,25 @@ def login():
     """
     Return a HTML of Landing Page.
     """
+    if session['user_id']:
+        flash("Anda sudah login", flash_code.INFO)
+        return redirect(url_for('landing_page.robots'))
+        
     form = LoginForm(request.form)
     if form.validate_on_submit():
-        flash("Data berhasil masuk", code.FLASH_SUCCESS)
+        result = Staff.login(form.npk.data, form.password.data)
+        if result["status"] == code.OK:
+            staff = result["staff"]
+            session['user_id'] = staff.id
+            flash("Anda berhasil masuk", flash_code.SUCCESS)
+        else:
+            flash("NPK/Password anda tidak sesuai", flash_code.DANGER)
+        # Register Purposes
+        # staff = Staff(form.npk.data, form.password.data)
+        # error = staff.insert()
+        # if error:
+        #     flash("Terjadi kesalahan", flash_code.DANGER)
+        # else:
+        #     flash("Data berhasil masuk", flash_code.SUCCESS)
+        #     form = LoginForm()
     return render_template("auth/login.html", form=form)
