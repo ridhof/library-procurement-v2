@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Halaman Login{% endblock %} 
+{% block sbadmin_css %}
+<link href="{{ url_for('static', filename='css/sb-admin-2.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body_attribs %}class="bg-gradient-primary"{% endblock %}
+
+{% block body %}
+<div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4">Selamat Datang!</h1>
+                                </div>
+                                <form 
+                                    class="user"
+                                    method="POST"
+                                    action="{{ url_for('auth.login') }}"
+                                    accept-charset="UTF-8"
+                                    role="form"
+                                    >
+                                    {{ form.csrf_token }}
+                                    <div class="form-group">
+                                    {% with messages = get_flashed_messages(with_categories=true) %}
+                                    {% if messages %}
+                                    <div>
+                                        {% for category, message in messages %}
+                                        <div class="alert alert-{{ category }}" role="alert">
+                                        {{ message }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% if form.errors %}
+                                    <div>
+                                        {% for field, error in form.errors.items() %}
+                                        {% for e in error %}
+                                        <div class="alert alert-danger" role="alert">
+                                        {{ e }}
+                                        </div>
+                                        {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ render_field(form.npk, class="form-control form-control-user", placeholder="NPK") }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ render_field(form.password, class="form-control form-control-user", placeholder="Kata sandi") }}
+                                    </div>
+                                    <button class="btn btn-primary btn-user btn-block" type="submit" name="submit">
+                                        Login
+                                    </button>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <p class="small">
+                                        Pembuatan akun baru maupun lupa password dapat dilakukan
+                                        dengan menghubungi admin.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
