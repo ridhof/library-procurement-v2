@@ -19,3 +19,9 @@ CODE_MSG_MAP = {
     AUTHORIZATION_ERROR: 'authentication and authorization erorr',
     UNKNOWN_ERROR: 'unknown error'
 }
+
+FLASH_PRIMARY = 'primary'
+FLASH_SUCCESS = 'success'
+FLASH_INFO = 'info'
+FLASH_WARNING = 'warning'
+FLASH_DANGER: 'danger'
