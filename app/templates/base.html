@@ -190,7 +190,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Ridho Febriansa - Library Procurement 2019/2020</span>
+            <span>&copy; <span id="currentYear">year</span> Library Procurement</span>
           </div>
         </div>
       </footer>
@@ -208,7 +208,6 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
-  {% block scripts %}
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -218,7 +217,17 @@
 
   <!-- Custom scripts for all pages-->
   <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
-  {%- endblock scripts %}
+  {% block scripts_libs %}{%- endblock scripts_libs %}
+
+  <script>
+  $( document ).ready(function() {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    $("#currentYear").html(currentYear);
+  });
+  </script>
+
+  {% block scripts %}{%- endblock scripts %}
 {%- endblock body %}
 </body>
 {%- endblock html %}
