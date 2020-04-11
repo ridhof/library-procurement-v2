@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Buat Unit{% endblock %}
+
+{% block content_title %}Buat Unit{% endblock %}
+
+{% block button_insert %}
+<a href="{{ url_for('unit.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    &larr; Kembali ke Tabel Unit
+</a>
+{% endblock %}
+
+{% block form_error %}
+{% if form.errors %}
+<!-- Content Row -->
+<div class="row">
+{% for field, error in form.errors.items() %}
+    {% for e in error %}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card mb-4 py-3 border-bottom-danger">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Terjadi Kesalahan</div>
+                <div class="mb-0 text-gray-800">{{ e }}</div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+
+      <!-- Basic Card Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Buat Unit Baru</h6>
+        </div>
+        <div class="card-body">
+          <form class="user"
+            method="POST"
+            action="{{ url_for('unit.create') }}"
+            accept-charset="UTF-8"
+            role="form">
+              {{ form.csrf_token }}
+              <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <label for="kode_fakultas">Kode Fakultas:</label>
+                    {{ render_field(form.kode_fakultas, class="form-control form-control-user", placeholder="", type="number", min="0", max="100") }}
+                </div>
+                <div class="col-sm-6">
+                    <label for="kode_jurusan">Kode Jurusan:</label>
+                    {{ render_field(form.kode_jurusan, class="form-control form-control-user", placeholder="", type="number", min="0", max="100") }}
+                </div>
+              </div>
+              <div class="form-group">
+                  <label for="nama_unit">Nama Unit:</label>
+                  {{ render_field(form.nama_unit, class="form-control form-control-user", placeholder="", type="text") }}
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <label for="gedung">Gedung:</label>
+                    {{ render_field(form.gedung, class="form-control form-control-user", placeholder="", type="text") }}
+                </div>
+                <div class="col-sm-4">
+                    <label for="lantai">Lantai:</label>
+                    {{ render_field(form.lantai, class="form-control form-control-user", placeholder="", type="number", min="0", max="20") }}
+                </div>
+                <div class="col-sm-4">
+                    <label for="ruangan">Ruangan:</label>
+                    {{ render_field(form.ruangan, class="form-control form-control-user", placeholder="", type="text") }}
+                </div>
+              </div>
+              <button class="btn btn-primary btn-user btn-block" type="submit" name="submit">
+                  Simpan
+              </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+</div>
+{% endblock %}
