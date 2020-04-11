@@ -15,5 +15,19 @@ class Unit(Base):
     lantai = db.Column(db.String(2), nullable=True)
     ruangan = db.Column(db.String(3), nullable=True)
 
+    def __init__(self, kode, nama, gedung, lantai, ruangan):
+        self.kode = kode
+        self.nama = nama
+        self.gedung = gedung
+        self.lantai = lantai
+        self.ruangan = ruangan
+
     def __repr__(self):
         return '<Unit %r>' % (self.kode)
+
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            return {'status': 'error'}
