@@ -54,10 +54,12 @@ def create_app(config):
     # Import a module / component using its blueprint handler variable (mod_auth)
     from app.mod_landing_page.controllers import MOD_LANDING_PAGE as landing_page_module
     from app.mod_auth.controllers import MOD_AUTH as auth_module
+    from app.mod_dashboard.controllers import MOD_DASHBOARD as dashboard_module
 
     # Register blueprints
     APP.register_blueprint(landing_page_module)
     APP.register_blueprint(auth_module)
+    APP.register_blueprint(dashboard_module)
 
     # Build the database:
     # This will create the database file using SQLAlchemy

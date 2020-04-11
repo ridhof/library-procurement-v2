@@ -16,9 +16,10 @@ def login():
     """
     Return a HTML of Landing Page.
     """
-    if session['user_id']:
+    if session.get('user_id') is not None:
+        print(session.get('user_name'))
         flash("Anda sudah login", flash_code.INFO)
-        return redirect(url_for('landing_page.robots'))
+        return redirect(url_for('dashboard.dashboard'))
         
     form = LoginForm(request.form)
     if form.validate_on_submit():
@@ -26,7 +27,9 @@ def login():
         if result["status"] == code.OK:
             staff = result["staff"]
             session['user_id'] = staff.id
+            session['user_name'] = staff.nama
             flash("Anda berhasil masuk", flash_code.SUCCESS)
+            return redirect(url_for('dashboard.dashboard'))
         else:
             flash("NPK/Password anda tidak sesuai", flash_code.DANGER)
         # Register Purposes
@@ -38,3 +41,9 @@ def login():
         #     flash("Data berhasil masuk", flash_code.SUCCESS)
         #     form = LoginForm()
     return render_template("auth/login.html", form=form)
+
+@MOD_AUTH.route('/logout', methods=['GET'])
+def logout():
+    session.clear()
+    flash('Berhasil logout', 'info')
+    return redirect(url_for('auth.login'))
