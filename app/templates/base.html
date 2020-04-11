@@ -163,14 +163,22 @@
 
             <div class="topbar-divider d-none d-sm-block"></div>
 
+            {% set logged_name = session['user_name'] %}
+
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
+              {% if logged_name %}
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ logged_name }}</span>
               </a>
+              {% else %}
+              <a class="nav-link dropdown-toggle" href="{{ url_for('auth.login') }}" role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Login</span>
+              </a>
+              {% endif %}
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   Logout
                 </a>
@@ -182,7 +190,39 @@
         </nav>
         <!-- End of Topbar -->
 
-        {% block content -%} {%- endblock content %} 
+        {% block page_content -%} 
+        <div class="container-fluid">
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+          </div>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <!-- Content Row -->
+          <div class="row">
+            {% for category, message in messages %}
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card mb-4 py-3 border-bottom-{{ category }}">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-{{ category }} text-uppercase mb-1">{{ category }}</div>
+                      <div class="mb-0 text-gray-800">{{ message }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% endwith %}
+
+          {% block content -%}{% endblock content -%}
+        </div>
+        <!-- /.container-fluid -->
+        {%- endblock page_content %} 
 
       </div>
       <!-- End of Main Content -->
