@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Buat Unit Baru{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
 
-{% block content_title %}Buat Unit Baru{% endblock %}
+{% block content_title %}{{ page_title }}{% endblock %}
 
 {% block button_insert %}
 <a href="{{ url_for('unit.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
@@ -41,15 +41,15 @@
       <!-- Basic Card Example -->
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Buat Unit Baru</h6>
+          <h6 class="m-0 font-weight-bold text-primary">{{ page_title }}</h6>
         </div>
         <div class="card-body">
           <form class="user"
             method="POST"
-            action="{{ url_for('unit.create') }}"
             accept-charset="UTF-8"
             role="form">
               {{ form.csrf_token }}
+              {{ render_field(form.unit_id) }}
               <div class="form-group row">
                 <div class="col-sm-6 mb-3 mb-sm-0">
                     <label for="kode_fakultas">Kode Fakultas:</label>
@@ -78,9 +78,18 @@
                     {{ render_field(form.ruangan, class="form-control form-control-user", placeholder="", type="text") }}
                 </div>
               </div>
-              <button class="btn btn-primary btn-user btn-block" type="submit" name="submit">
+              <button class="btn btn-primary btn-user btn-block text-uppercase font-weight-bold" type="submit" name="submit">
                   Simpan
               </button>
+
+              {% if page_title == 'Ubah Unit' %}
+              {% set kode_unit = form.kode_fakultas.data + form.kode_jurusan.data %}
+              <a href='{{ url_for("unit.delete", unit_id=form.unit_id.data, kode_unit=kode_unit) }}' 
+                class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
+                  Hapus
+              </a>
+              {% endif %}
+              
           </form>
         </div>
       </div>
