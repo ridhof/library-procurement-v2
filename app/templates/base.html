@@ -31,7 +31,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
-  <link rel="manifest" href="{{ url_for('static', filename='icons//site.webmanifest') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='icons/site.webmanifest') }}">
 
   {%- block styles %}
   <!-- Custom fonts for this template-->
@@ -184,7 +184,9 @@
               </a>
               {% else %}
               <a class="nav-link dropdown-toggle" href="{{ url_for('auth.login') }}" role="button" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Login</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                  <i class="fas fa-user-circle fa-sm text-gray-600"></i> Login
+                </span>
               </a>
               {% endif %}
               <!-- Dropdown - User Information -->
