@@ -47,7 +47,7 @@
             <td>{{ unit.nama }}</td>
             <td>Gedung {{ unit.gedung }}, Lantai {{ unit.lantai }}, Ruangan {{ unit.ruangan }}</td>
             <td>
-                <button class="btn btn-primary btn-user btn-block">Update</button>
+                <a href="{{ url_for('unit.update', unit_id=unit.id, unit_kode=unit.kode) }}" class="btn btn-primary btn-user btn-block">Update</button>
             </td>
           </tr>
           {% endfor %}
