@@ -4,6 +4,8 @@ Unit Module's Controllers
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.mod_unit.forms import UnitForm
+
+from app.mod_auth.models import Staff
 from app.mod_unit.models import Unit
 
 from common import code, flash_code
@@ -15,14 +17,19 @@ def table():
     """
     Return Unit Table Page
     """
+    if Staff.is_login() is None:
+        return redirect(url_for('auth.login'))
     units = Unit.query.all()
     return render_template("unit/table.html", units=units)
 
-@MOD_UNIT.route('/create', methods=['GET', 'POST'])
+@MOD_UNIT.route('/baru', methods=['GET', 'POST'])
 def create():
     """
     Return Create Page
     """
+    if Staff.is_login() is None:
+        return redirect(url_for('auth.login'))
+
     form = UnitForm(request.form)
     if form.validate_on_submit():
         unit = Unit(

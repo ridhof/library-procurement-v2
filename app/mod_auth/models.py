@@ -1,11 +1,12 @@
 """
 Auth's Models contains Base and Staff Object
 """
+from flask import flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import DB as db
 from app.models import Base
 from app.mod_unit.models import Unit
-from common import perpus_code, code
+from common import code, flash_code, perpus_code
 
 
 class Staff(Base):
@@ -43,6 +44,15 @@ class Staff(Base):
             if staff.check_password(password):
                 return {"status": code.OK, "staff": staff}
         return {"status": code.AUTHORIZATION_ERROR}
+
+    def is_login():
+        user = None
+        if session.get('user_id') is None:
+            flash("Silahkan login terlebih dahulu", flash_code.WARNING)
+        else:
+            user_id = session.get('user_id')
+            user = Staff.query.filter_by(id=user_id).first()
+        return user
 
     def get_unit(self):
         return Unit.query.filter_by(kode=self.unit_id).first()
