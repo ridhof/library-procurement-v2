@@ -8,6 +8,12 @@
 
 {% block content_title %}Staff{% endblock %}
 
+{% block button_insert %}
+<a href="{{ url_for('staff.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-plus fa-sm text-white-50"></i> Buat Data Baru
+</a>
+{% endblock %}
+
 {% block content %}
 
 <!-- DataTales Example -->
