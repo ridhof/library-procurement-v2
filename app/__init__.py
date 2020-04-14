@@ -56,12 +56,14 @@ def create_app(config):
     from app.mod_auth.controllers import MOD_AUTH as auth_module
     from app.mod_dashboard.controllers import MOD_DASHBOARD as dashboard_module
     from app.mod_unit.controllers import MOD_UNIT as unit_module
+    from app.mod_staff.controllers import MOD_STAFF as staff_module
 
     # Register blueprints
     APP.register_blueprint(landing_page_module)
     APP.register_blueprint(auth_module)
     APP.register_blueprint(dashboard_module)
     APP.register_blueprint(unit_module)
+    APP.register_blueprint(staff_module)
 
     # Build the database:
     # This will create the database file using SQLAlchemy
