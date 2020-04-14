@@ -8,7 +8,7 @@ from app.mod_unit.forms import UnitForm
 from app.mod_auth.models import Staff
 from app.mod_unit.models import Unit
 
-from common import code, flash_code
+from common import code, flash_code, perpus_code
 
 MOD_UNIT = Blueprint('unit', __name__, url_prefix='/unit/')
 
@@ -28,8 +28,12 @@ def create():
     """
     Return Create Page
     """
-    if Staff.is_login() is None:
+    user = Staff.is_login()
+    if user is None:
         return redirect(url_for('auth.login'))
+
+    if not user.is_role(perpus_code.DEV):
+        return redirect(url_for('unit.table'))
 
     form = UnitForm(request.form)
     if form.validate_on_submit():
@@ -55,7 +59,8 @@ def update(unit_id, unit_kode):
     """
     Return Update Page
     """
-    if Staff.is_login() is None:
+    user = Staff.is_login() 
+    if user is None:
         return redirect(url_for('auth.login'))
 
     unit = Unit.get_by_kode(unit_id, unit_kode)
@@ -105,7 +110,7 @@ def update(unit_id, unit_kode):
                 'ruangan': unit.ruangan
             }
         )
-    return render_template("unit/form.html", form=form, page_title="Ubah Unit")
+    return render_template("unit/form.html", form=form, page_title="Ubah Unit", user_role=user.perpus_role)
 
 @MOD_UNIT.route('/<unit_id>/<kode_unit>hapus', methods=['GET'])
 def delete(unit_id, kode_unit):
