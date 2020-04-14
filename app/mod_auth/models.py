@@ -63,6 +63,9 @@ class Staff(Base):
     def get_unit(self):
         return Unit.query.filter_by(kode=self.unit_id).first()
 
+    def get_all():
+        return Staff.query.filter_by(is_delete=0).all()
+
     def insert(self):
         try:
             db.session.add(self)
