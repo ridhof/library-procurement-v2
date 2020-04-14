@@ -39,7 +39,7 @@ class Staff(Base):
         self.password = generate_password_hash(password)
 
     def login(npk, password):
-        staff = Staff.query.filter_by(npk=npk).first()
+        staff = Staff.query.filter_by(npk=npk, is_delete=0).first()
         if staff:
             if staff.check_password(password):
                 return {"status": code.OK, "staff": staff}
