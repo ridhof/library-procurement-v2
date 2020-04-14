@@ -24,10 +24,14 @@ class Staff(Base):
     is_kajur = db.Column(db.Boolean, nullable=True)
     perpus_role = db.Column(db.String(8), nullable=True)
 
-    def __init__(self, npk, password):
+    def __init__(self, npk, password, nama, unit_id, is_kalab, is_kajur, perpus_role):
         self.npk = npk
         self.password = generate_password_hash(password)
-        self.unit_id = 1
+        self.nama = nama
+        self.unit_id = unit_id
+        self.is_kalab = is_kalab
+        self.is_kajur = is_kajur
+        self.perpus_role = perpus_role
 
     def __repr__(self):
         return '<Staff %r>' % (self.nama)
@@ -70,5 +74,6 @@ class Staff(Base):
         try:
             db.session.add(self)
             db.session.commit()
+            return True
         except:
-            return {'status': 'error'}
+            return False
