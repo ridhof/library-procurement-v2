@@ -8,11 +8,13 @@
 
 {% block content_title %}Unit{% endblock %}
 
+{% if perpus_role == 'dev' %}
 {% block button_insert %}
 <a href="{{ url_for('unit.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-plus fa-sm text-white-50"></i> Buat Data Baru
 </a>
 {% endblock %}
+{% endif %}
 
 {% block content %}
 

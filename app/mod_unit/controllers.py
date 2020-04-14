@@ -17,10 +17,11 @@ def table():
     """
     Return Unit Table Page
     """
-    if Staff.is_login() is None:
+    user = Staff.is_login()
+    if user is None:
         return redirect(url_for('auth.login'))
     units = Unit.get_all()
-    return render_template("unit/table.html", units=units)
+    return render_template("unit/table.html", units=units, user_role=user.perpus_role)
 
 @MOD_UNIT.route('/baru', methods=['GET', 'POST'])
 def create():
