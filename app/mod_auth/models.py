@@ -70,6 +70,9 @@ class Staff(Base):
     def get_all():
         return Staff.query.filter_by(is_delete=0).all()
 
+    def get_by_unit(unit_id):
+        return Staff.query.filter_by(unit_id=unit_id, is_delete=0).all()
+
     def insert(self):
         try:
             db.session.add(self)
