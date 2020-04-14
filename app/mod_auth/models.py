@@ -59,8 +59,8 @@ class Staff(Base):
         return user
 
     def is_role(self, role):
-        if self.perpus_role is role:
-            flash("Akun anda tidak dapat mengakses/melakukan hal tersebut", flash_code.WARNING)
+        if self.perpus_role != role:
+            flash("Akun anda tidak dapat mengakses atau melakukan hal tersebut", flash_code.WARNING)
             return False
         return True
 

@@ -8,13 +8,13 @@
 
 {% block content_title %}Unit{% endblock %}
 
-{% if perpus_role == 'dev' %}
 {% block button_insert %}
+{% if user_role == 'dev' %}
 <a href="{{ url_for('unit.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-plus fa-sm text-white-50"></i> Buat Data Baru
 </a>
-{% endblock %}
 {% endif %}
+{% endblock %}
 
 {% block content %}
 
@@ -49,7 +49,9 @@
             <td>{{ unit.nama }}</td>
             <td>Gedung {{ unit.gedung }}, Lantai {{ unit.lantai }}, Ruangan {{ unit.ruangan }}</td>
             <td>
+                {% if (user_unit_id == unit.id and allow_edit) or user_role == 'dev' %}
                 <a href="{{ url_for('unit.update', unit_id=unit.id, unit_kode=unit.kode) }}" class="btn btn-primary btn-user btn-block">Update</button>
+                {% endif %}
             </td>
           </tr>
           {% endfor %}

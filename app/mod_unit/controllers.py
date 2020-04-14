@@ -20,8 +20,11 @@ def table():
     user = Staff.is_login()
     if user is None:
         return redirect(url_for('auth.login'))
+    allow_edit = False
+    if user.is_kajur or user.is_kalab or user.perpus_role == perpus_code.DEV:
+        allow_edit = True
     units = Unit.get_all()
-    return render_template("unit/table.html", units=units, user_role=user.perpus_role)
+    return render_template("unit/table.html", units=units, user_role=user.perpus_role, user_unit_id=user.unit_id, allow_edit=allow_edit)
 
 @MOD_UNIT.route('/baru', methods=['GET', 'POST'])
 def create():
