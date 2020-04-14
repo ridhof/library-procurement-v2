@@ -54,6 +54,12 @@ class Staff(Base):
             user = Staff.query.filter_by(id=user_id).first()
         return user
 
+    def is_role(self, role):
+        if self.perpus_role is role:
+            flash("Akun anda tidak dapat mengakses/melakukan hal tersebut", flash_code.WARNING)
+            return False
+        return True
+
     def get_unit(self):
         return Unit.query.filter_by(kode=self.unit_id).first()
 
