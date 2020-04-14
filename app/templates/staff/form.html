@@ -62,10 +62,12 @@
                   {{ render_field(form.nama, class="form-control form-control-user", placeholder="", type="text") }}
               </div>
 
+              {% if not user.is_kalab %}
               <div class="form-group">
                 <label for="role">Role:</label>
                 {{ render_field(form.role, size=3) }}
               </div>
+              {% endif %}
 
               <button class="btn btn-primary btn-user btn-block text-uppercase font-weight-bold" type="submit" name="submit">
                   Simpan

@@ -18,8 +18,15 @@ def table():
     user = Staff.is_login()
     if user is None:
         return redirect(url_for('auth.login'))
-    staffs = Staff.get_all()
-    return render_template("staff/table.html", staffs=staffs, user_role=user.perpus_role)
+    
+    user_role = 'karyawan'
+    if user.is_kajur:
+        user_role = 'kajur'
+    elif user.is_kalab:
+        user_role = 'kalab'
+
+    staffs = Staff.get_by_unit(user.unit_id)
+    return render_template("staff/table.html", staffs=staffs, user_role=user_role, user=user)
 
 @MOD_STAFF.route('/baru', methods=['GET', 'POST'])
 def create():
@@ -29,6 +36,10 @@ def create():
     user = Staff.is_login()
     if user is None:
         return redirect(url_for('auth.login'))
+
+    if not (user.is_kajur or user.is_kalab or user.perpus_role == 'dev'):
+        flash("Akun anda tidak dapat mengakses atau melakukan hal tersebut", flash_code.WARNING)
+        return redirect(url_for('staff.table'))
 
     form = StaffForm(request.form)
     if form.validate_on_submit():
@@ -55,4 +66,4 @@ def create():
                 return redirect(url_for('staff.create'))
             else:
                 flash("Terjadi kesalahan, gagal menyimpan data", flash_code.DANGER)
-    return render_template("staff/form.html", form=form, page_title="Tambah Staff Baru")
+    return render_template("staff/form.html", form=form, page_title="Tambah Staff Baru", user=user)

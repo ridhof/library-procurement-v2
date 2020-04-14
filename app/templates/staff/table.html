@@ -9,9 +9,11 @@
 {% block content_title %}Staff{% endblock %}
 
 {% block button_insert %}
+{% if user_role == 'kajur' or user_role == 'kalab' or user.perpus_role == 'dev' %}
 <a href="{{ url_for('staff.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-plus fa-sm text-white-50"></i> Buat Data Baru
 </a>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -44,7 +46,9 @@
               <td>{{ staff.npk }}</td>
               <td>{{ staff.nama }}</td>
               <td>
+                  {% if user_role == 'kajur' or user_role == 'kalab' or user.id == staff.id or user.perpus_role == 'dev' %}
                   <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                  {% endif %}
               </td>
             </tr>
             {% endfor %}
