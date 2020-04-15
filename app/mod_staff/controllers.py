@@ -137,3 +137,13 @@ def update(staff_id, staff_npk):
         page_title="Ubah Staff", 
         user=user
     )
+
+@MOD_STAFF.route('/<staff_id>/<staff_npk>/hapus', methods=['GET'])
+def delete(staff_id, staff_npk):
+    staff_delete = Staff.delete(staff_id)
+    if staff_delete:
+        flash(f"Staff dengan NPK { staff_npk } telah berhasil dihapus", flash_code.SUCCESS)
+        return redirect(url_for("staff.table"))
+    else:
+        flash(f"Terjadi kesalahan, Staff dengan NPK { staff_npk } gagal dihapus", flash_code.DANGER)
+        return redirect(url_for("staff.update", staff_id=staff_id, staff_npk=staff_npk))

@@ -112,3 +112,13 @@ class Staff(Base):
             return True
         except:
             return False
+
+    def delete(staff_id):
+        try:
+            staff = Staff.query.filter_by(id=staff_id).first()
+            staff.is_delete = 1
+            db.session.add(staff)
+            db.session.commit()
+            return True
+        except:
+            return False

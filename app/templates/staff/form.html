@@ -72,6 +72,15 @@
               <button class="btn btn-primary btn-user btn-block text-uppercase font-weight-bold" type="submit" name="submit">
                   Simpan
               </button>
+
+              {% if page_title == 'Ubah Staff' %}
+                {% if user.is_kajur %}
+                <a href='{{ url_for("staff.delete", staff_id=form.staff_id.data, staff_npk=form.npk.data) }}' 
+                  class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
+                    Hapus
+                </a>
+                {% endif %}
+              {% endif %}
           </form>
         </div>
       </div>
