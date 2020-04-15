@@ -64,6 +64,14 @@ class Staff(Base):
             return False
         return True
 
+    def get_unit_role(self):
+        role = 'staff'
+        if self.is_kajur:
+            role = 'kajur'
+        elif self.is_kalab:
+            role = 'kalab'
+        return role
+
     def get_unit(self):
         return Unit.query.filter_by(kode=self.unit_id).first()
 
@@ -73,9 +81,33 @@ class Staff(Base):
     def get_by_unit(unit_id):
         return Staff.query.filter_by(unit_id=unit_id, is_delete=0).all()
 
+    def get_by_npk(staff_id, npk):
+        return Staff.query.filter_by(id=staff_id, npk=npk, is_delete=0).first()
+
     def insert(self):
         try:
             db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
+
+    def update(staff_id, npk=None, nama=None, role=None):
+        try:
+            staff = Staff.query.filter_by(id=staff_id, is_delete=0).first()
+
+            if npk is not None:
+                staff.npk = npk
+            if nama is not None:
+                staff.nama = nama
+            if role is not None:
+                staff.is_kajur = 0
+                staff.is_kalab = 0
+                if role == 'kajur':
+                    staff.is_kajur = 1
+                elif role == 'kalab':
+                    staff.is_kalab = 1
+            db.session.add(staff)
             db.session.commit()
             return True
         except:
