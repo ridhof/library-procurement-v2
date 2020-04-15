@@ -62,7 +62,7 @@
                   {{ render_field(form.nama, class="form-control form-control-user", placeholder="", type="text") }}
               </div>
 
-              {% if not user.is_kalab %}
+              {% if user.is_kajur %}
               <div class="form-group">
                 <label for="role">Role:</label>
                 {{ render_field(form.role, size=3) }}

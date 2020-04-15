@@ -47,7 +47,10 @@
               <td>{{ staff.nama }}</td>
               <td>
                   {% if user_role == 'kajur' or user_role == 'kalab' or user.id == staff.id or user.perpus_role == 'dev' %}
-                  <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                    {% if user_role == 'kalab' and staff.is_kajur %}
+                    {% else %}
+                    <a href="{{ url_for('staff.update', staff_id=staff.id, staff_npk=staff.npk) }}" class="btn btn-primary btn-user btn-block">Update</button>
+                    {% endif %}
                   {% endif %}
               </td>
             </tr>
