@@ -4,7 +4,7 @@ Staff Module's Controllers
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.mod_auth.models import Staff
-from app.mod_staff.forms import StaffForm
+from app.mod_staff.forms import PasswordForm, StaffForm
 
 from common import flash_code, perpus_code
 
@@ -147,3 +147,25 @@ def delete(staff_id, staff_npk):
     else:
         flash(f"Terjadi kesalahan, Staff dengan NPK { staff_npk } gagal dihapus", flash_code.DANGER)
         return redirect(url_for("staff.update", staff_id=staff_id, staff_npk=staff_npk))
+
+@MOD_STAFF.route('/<staff_id>/<staff_npk>/ubah/password', methods=['GET', 'POST'])
+def password(staff_id, staff_npk):
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    form = PasswordForm(request.form)
+    if form.validate_on_submit():
+        if form.password.data != form.repassword.data:
+            flash(f"Password yang diberikan tidak sama, pastikan kedua password sama", flash_code.WARNING)
+        else:
+            staff = Staff.get_by_npk(staff_id, staff_npk)
+            if staff is not None:
+                if staff.change_password(form.password.data):
+                    flash(f"Password untuk Staff dengan NPK { staff_npk } berhasil diubah", flash_code.SUCCESS)
+                else:
+                    flash(f"Terjadi kesalahan saat menyimpan password Staff { staff_npk }, perubahan gagal disimapn", flash_code.DANGER)
+            else:
+                flash(f"Staff dengan NPK { staff_npk } tidak dapat ditemukan, gagal mengubah password", flash_code.DANGER)
+            
+    return render_template("staff/password_form.html", form=form)
