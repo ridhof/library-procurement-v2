@@ -47,3 +47,10 @@ def logout():
     session.clear()
     flash('Berhasil logout', 'info')
     return redirect(url_for('auth.login'))
+
+@MOD_AUTH.route('/password', methods=['GET'])
+def password():
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+    return redirect(url_for('staff.password', staff_id=user.id, staff_npk=user.npk))
