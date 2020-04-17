@@ -122,3 +122,12 @@ class Staff(Base):
             return True
         except:
             return False
+
+    def change_password(self, new_password):
+        try:
+            self.set_password(new_password)
+            db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
