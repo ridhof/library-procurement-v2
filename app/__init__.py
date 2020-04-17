@@ -57,6 +57,7 @@ def create_app(config):
     from app.mod_dashboard.controllers import MOD_DASHBOARD as dashboard_module
     from app.mod_unit.controllers import MOD_UNIT as unit_module
     from app.mod_staff.controllers import MOD_STAFF as staff_module
+    from app.mod_matakuliah.controllers import MOD_MATAKULIAH as matakuliah_module
 
     # Register blueprints
     APP.register_blueprint(landing_page_module)
@@ -64,6 +65,7 @@ def create_app(config):
     APP.register_blueprint(dashboard_module)
     APP.register_blueprint(unit_module)
     APP.register_blueprint(staff_module)
+    APP.register_blueprint(matakuliah_module)
 
     # Build the database:
     # This will create the database file using SQLAlchemy
