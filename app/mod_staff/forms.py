@@ -2,9 +2,10 @@
 Staff Module's Forms
 """
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, SelectField, TextField
+from wtforms import HiddenField, PasswordField, SelectField, TextField
 
 from wtforms.validators import Required
+
 
 class StaffForm(FlaskForm):
     """
@@ -14,7 +15,7 @@ class StaffForm(FlaskForm):
     npk = TextField('NPK', [Required()])
     nama = TextField('Nama', [Required()])
     role = SelectField(
-        'Role', 
+        'Role',
         choices=[
             ('staff', 'Staff'),
             ('kalab', 'Kepala Lab'),
@@ -23,3 +24,12 @@ class StaffForm(FlaskForm):
         validators=[Required()],
         default='staff'
     )
+
+
+class PasswordForm(FlaskForm):
+    """
+    Forms to Change Password
+    """
+    staff_id = HiddenField("IdStaff")
+    password = PasswordField("Password", [Required()])
+    repassword = PasswordField("Repassword", [Required()])
