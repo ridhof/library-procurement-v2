@@ -45,11 +45,24 @@
             <tr>
               <td>{{ staff.npk }}</td>
               <td>{{ staff.nama }}</td>
-              <td>
+              <td align="right">
                   {% if user_role == 'kajur' or user_role == 'kalab' or user.id == staff.id or user.perpus_role == 'dev' %}
                     {% if user_role == 'kalab' and staff.is_kajur %}
                     {% else %}
-                    <a href="{{ url_for('staff.update', staff_id=staff.id, staff_npk=staff.npk) }}" class="btn btn-primary btn-user btn-block">Update</button>
+                    <button class="btn btn-primary btn-user dropdown-toggle btn-block" data-toggle="dropdown">Aksi</button>
+                    <div 
+                      class="dropdown-menu" 
+                      x-placement="bottom-start"
+                      style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);"
+                    >
+                      <a class="dropdown-item" href="{{ url_for('staff.update', staff_id=staff.id, staff_npk=staff.npk) }}">
+                        Ubah Data
+                      </a>
+                      <hr>
+                      <a class="dropdown-item" href="{{ url_for('staff.password', staff_id=staff.id, staff_npk=staff.npk) }}">
+                        Ubah Password
+                      </a>
+                    </div>
                     {% endif %}
                   {% endif %}
               </td>
