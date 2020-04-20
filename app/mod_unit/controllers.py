@@ -47,7 +47,7 @@ def create():
             form.lantai.data,
             form.ruangan.data
         )
-        if Unit.query.filter_by(kode=unit.kode, is_delete=0).first is not None:
+        if Unit.query.filter_by(kode=unit.kode, is_delete=0).first() is not None:
             flash(f"Gagal menambahkan data, Unit dengan kode { unit.kode } sudah digunakan", flash_code.DANGER)
         else:
             if unit.insert():
