@@ -8,6 +8,12 @@
 
 {% block content_title %}Matakuliah{% endblock %}
 
+{% block button_insert %}
+<a href="{{ url_for('matakuliah.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-plus fa-sm text-white-50"></i> Buat Data Baru
+</a>
+{% endblock %}
+
 {% block content %}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -41,7 +47,7 @@
             <td>{{ matakuliah.kode }}</td>
             <td>{{ matakuliah.nama }}</td>
             <td>{{ matakuliah.sks }}</td>
-            <td>{{ matakuliah.kurikulum }}</td>
+            <td>{{ matakuliah.get_kurikulum() }}</td>
             <td>
                 <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
             </td>
