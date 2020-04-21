@@ -11,7 +11,6 @@ def get_tahun_ajaran():
     tahun = now.year + 3
     list_tahun_ajaran = []
     for i in range(2016, tahun):
-        print(i)
         list_tahun_ajaran.append(
             (f"{ i }/{ i + 1 }", f"{ i }/{ i + 1 }")
         )
