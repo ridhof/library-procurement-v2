@@ -49,7 +49,7 @@
             <td>{{ matakuliah.sks }}</td>
             <td>{{ matakuliah.get_kurikulum() }}</td>
             <td>
-                <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                <a href="{{ url_for('matakuliah.update', matakuliah_id=matakuliah.id, matakuliah_kode=matakuliah.kode) }}" class="btn btn-primary btn-user btn-block">Update</button>
             </td>
           </tr>
           {% endfor %}
