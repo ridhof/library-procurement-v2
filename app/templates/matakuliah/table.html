@@ -49,7 +49,20 @@
             <td>{{ matakuliah.sks }}</td>
             <td>{{ matakuliah.get_kurikulum() }}</td>
             <td>
-                <a href="{{ url_for('matakuliah.update', matakuliah_id=matakuliah.id, matakuliah_kode=matakuliah.kode) }}" class="btn btn-primary btn-user btn-block">Update</button>
+              <button class="btn btn-primary btn-user dropdown-toggle btn-block" data-toggle="dropdown">Aksi</button>
+                <div 
+                  class="dropdown-menu" 
+                  x-placement="bottom-start"
+                  style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);"
+                >
+                  <a class="dropdown-item" href="{{ url_for('matakuliah.update', matakuliah_id=matakuliah.id, matakuliah_kode=matakuliah.kode) }}">
+                    Ubah Data
+                  </a>
+                  <hr>
+                  <a class="dropdown-item" href="{{ url_for('referensi.table', matakuliah_id=matakuliah.id, matakuliah_kode=matakuliah.kode) }}">
+                    Kunjungi Referensi
+                  </a>
+                </div>
             </td>
           </tr>
           {% endfor %}
