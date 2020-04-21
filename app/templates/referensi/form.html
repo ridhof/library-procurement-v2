@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content_title %}{{ page_title }}{% endblock %}
+
+{% block button_insert %}
+<a href="{{ url_for('referensi.table', matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    &larr; Kembali ke Tabel Referensi
+</a>
+{% endblock %}
+
+{% block form_error %}
+{% if form.errors %}
+<!-- Content Row -->
+<div class="row">
+{% for field, error in form.errors.items() %}
+    {% for e in error %}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card mb-4 py-3 border-bottom-danger">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Terjadi Kesalahan</div>
+                <div class="mb-0 text-gray-800">{{ e }}</div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+
+      <!-- Basic Card Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">{{ page_title }}</h6>
+        </div>
+        <div class="card-body">
+          <form class="user"
+            method="POST"
+            accept-charset="UTF-8"
+            role="form">
+
+              {{ form.csrf_token }}
+
+              {{ render_field(form.referensi_id) }}
+              {{ render_field(form.matakuliah_id) }}
+
+              <div class="form-group">
+                <label for="kode">Pengarang:</label>
+                {{ render_field(form.pengarang, class="form-control form-control-user", placeholder="Graham, B., & Dodd, D. L.", type="text", maxlength="70") }}
+              </div>
+
+              <div class="form-group">
+                <label for="kode">Judul:</label>
+                {{ render_field(form.judul, class="form-control form-control-user", placeholder="Security analysis: principles and technique", type="text", maxlength="120") }}
+              </div>
+
+              <div class="form-group">
+                <label for="kode">Keterangan:</label>
+                {{ render_field(form.keterangan, class="form-control form-control-user", placeholder="Graham, B., & Dodd, D. L. (2009). Security analysis: principles and technique. New York: McGraw-Hill.", type="text", maxlength="300") }}
+              </div>
+
+              <button class="btn btn-primary btn-user btn-block text-uppercase font-weight-bold" type="submit" name="submit">
+                  Simpan
+              </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+</div>
+{% endblock %}

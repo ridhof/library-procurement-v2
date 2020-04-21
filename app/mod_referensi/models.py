@@ -29,3 +29,11 @@ class Referensi(Base):
 
     def get_by_matakuliah_id(matakuliah_id):
         return Referensi.query.filter_by(matakuliah_id=matakuliah_id, is_delete=0).all()
+
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
