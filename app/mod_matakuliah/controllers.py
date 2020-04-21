@@ -131,3 +131,13 @@ def update(matakuliah_id, matakuliah_kode):
             }
         )
     return render_template("matakuliah/form.html", form=form, page_title="Ubah Matakuliah")
+
+@MOD_MATAKULIAH.route('/<matakuliah_id>/<matakuliah_kode>/hapus', methods=['GET'])
+def delete(matakuliah_id, matakuliah_kode):
+    matakuliah_delete = Matakuliah.delete(matakuliah_id)
+    if matakuliah_delete:
+        flash(f"Matakuliah dengan kode { matakuliah_kode } telah berhasil dihapus", flash_code.SUCCESS)
+        return redirect(url_for("matakuliah.table"))
+    else:
+        flash(f"Terjadi kesalahan, matakuliah dengan kode { matakuliah_kode } gagal dihapus", flash_code.DANGER)
+        return redirect(url_for("matakuliah.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode))

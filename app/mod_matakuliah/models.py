@@ -78,3 +78,13 @@ class Matakuliah(Base):
             return True
         except:
             return False
+
+    def delete(matakuliah_id):
+        try:
+            matakuliah = Matakuliah.query.filter_by(id=matakuliah_id).first()
+            matakuliah.is_delete = 1
+            db.session.add(matakuliah)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
