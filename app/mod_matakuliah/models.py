@@ -47,9 +47,33 @@ class Matakuliah(Base):
     def get_by_unit(unit_id):
         return Matakuliah.query.filter_by(unit_id=unit_id, is_delete=0).all()
 
+    def get_by_kode(matakuliah_id, kode):
+        return Matakuliah.query.filter_by(id=matakuliah_id, kode=kode, is_delete=0).first()
+
     def insert(self):
         try:
             db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
+
+    def update(matakuliah_id, kode=None, nama=None, sks=None, deskripsi_singkat=None, standar_kompetensi=None, tahun_ajaran=None, kurikulum=None):
+        try:
+            matakuliah = Matakuliah.query.filter_by(id=matakuliah_id, is_delete=0).first()
+            if kode is not None:
+                matakuliah.kode = kode
+            if nama is not None:
+                matakuliah.nama = nama
+            if sks is not None:
+                matakuliah.sks = sks
+            if deskripsi_singkat is not None:
+                matakuliah.deskripsi_singkat = deskripsi_singkat
+            if standar_kompetensi is not None:
+                matakuliah.standar_kompetensi = standar_kompetensi
+            if tahun_ajaran is not None and kurikulum is not None:
+                matakuliah.set_kurikulum(f"{tahun_ajaran}-{kurikulum}")
+            db.session.add(matakuliah)
             db.session.commit()
             return True
         except:
