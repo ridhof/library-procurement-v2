@@ -8,11 +8,12 @@ from wtforms.validators import Required
 
 def get_tahun_ajaran():
     now = datetime.datetime.now()
-    tahun = now.year - 3
+    tahun = now.year + 3
     list_tahun_ajaran = []
-    for i in range(5):
+    for i in range(2016, tahun):
+        print(i)
         list_tahun_ajaran.append(
-            (f"{tahun + i}/{tahun + (i + 1)}", f"{tahun + i}/{tahun + (i + 1)}")
+            (f"{ i }/{ i + 1 }", f"{ i }/{ i + 1 }")
         )
     return list_tahun_ajaran
 
