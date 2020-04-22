@@ -55,3 +55,13 @@ class Referensi(Base):
             return True
         except:
             return False
+
+    def delete(referensi_id):
+        try:
+            referensi = Referensi.query.filter_by(id=referensi_id).first()
+            referensi.is_delete = 1
+            db.session.add(referensi)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
