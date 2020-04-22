@@ -30,9 +30,27 @@ class Referensi(Base):
     def get_by_matakuliah_id(matakuliah_id):
         return Referensi.query.filter_by(matakuliah_id=matakuliah_id, is_delete=0).all()
 
+    def get_by_id(referensi_id):
+        return Referensi.query.filter_by(id=referensi_id, is_delete=0).first()
+
     def insert(self):
         try:
             db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
+
+    def update(referensi_id, pengarang=None, judul=None, keterangan=None):
+        try:
+            referensi = Referensi.query.filter_by(id=referensi_id, is_delete=0).first()
+            if pengarang is not None:
+                referensi.pengarang = pengarang
+            if judul is not None:
+                referensi.judul = judul
+            if keterangan is not None:
+                referensi.keterangan = keterangan
+            db.session.add(referensi)
             db.session.commit()
             return True
         except:
