@@ -98,3 +98,13 @@ def update(matakuliah_id, matakuliah_kode, referensi_id):
             }
         )
     return render_template("referensi/form.html", form=form, page_title="Ubah Referensi", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode)
+
+@MOD_REFERENSI.route('<matakuliah_id>/<matakuliah_kode>/hapus/<referensi_id>', methods=['GET'])
+def delete(matakuliah_id, matakuliah_kode, referensi_id):
+    referensi_delete = Referensi.delete(referensi_id)
+    if referensi_delete:
+        flash(f"Referensi telah berhasil dihapus", flash_code.SUCCESS)
+        return redirect(url_for("referensi.table", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode))
+    else:
+        flash(f"Terjadi kesalahan, referensi gagal dihapus", flash_code.DANGER)
+        return redirect(url_for("referensi.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, referensi_id=referensi_id))
