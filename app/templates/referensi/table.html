@@ -49,7 +49,7 @@
             <td>{{ referensi.judul }}</td>
             <td>{{ referensi.keterangan }}</td>
             <td>
-                <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                <a href="{{ url_for('referensi.update', matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, referensi_id=referensi.id) }}" class="btn btn-primary btn-user btn-block">Update</button>
             </td>
           </tr>
           {% endfor %}
