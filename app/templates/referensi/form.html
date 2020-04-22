@@ -72,6 +72,13 @@
               <button class="btn btn-primary btn-user btn-block text-uppercase font-weight-bold" type="submit" name="submit">
                   Simpan
               </button>
+
+              {% if page_title == 'Ubah Referensi' %}
+              <a href='{{ url_for("referensi.delete", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, referensi_id=form.referensi_id.data) }}' 
+                class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
+                  Hapus
+              </a>
+              {% endif %}
           </form>
         </div>
       </div>
