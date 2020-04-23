@@ -74,7 +74,7 @@ def update(matakuliah_id, matakuliah_kode, rps_id):
             materi=form.materi.data
         )
         if rps_update:
-            flash(f"Referensi telah berhasil diubah", flash_code.SUCCESS)
+            flash(f"RPS telah berhasil diubah", flash_code.SUCCESS)
             return redirect(url_for("rps.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, rps_id=rps_id))
         else:
             flash(f"Terjadi kesalahan pada proses penyimpanan, data gagal diubah", flash_code.DANGER)
