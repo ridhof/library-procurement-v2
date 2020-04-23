@@ -50,3 +50,51 @@ def create(matakuliah_id, matakuliah_kode):
 
     form.matakuliah_id.data = matakuliah_id
     return render_template("rps/form.html", form=form, page_title="Buat RPS Baru", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode)
+
+@MOD_RPS.route('<matakuliah_id>/<matakuliah_kode>/ubah/<rps_id>', methods=['GET', 'POST'])
+def update(matakuliah_id, matakuliah_kode, rps_id):
+    """
+    Return Update Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    rps = Rps.get_by_id(rps_id)
+    if rps is None:
+        flash(f"Terjadi kesalahan, RPS tidak dapat ditemukan", flash_code.WARNING)
+        return redirect(url_for('rps.table', matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode))
+
+    form = RpsForm(request.form)
+    if form.validate_on_submit():
+        rps_update = Rps.update(
+            rps_id=form.rps_id.data,
+            kompetensi_dasar=form.kompetensi_dasar.data,
+            indikator_capaian=form.indikator_capaian.data,
+            materi=form.materi.data
+        )
+        if rps_update:
+            flash(f"Referensi telah berhasil diubah", flash_code.SUCCESS)
+            return redirect(url_for("rps.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, rps_id=rps_id))
+        else:
+            flash(f"Terjadi kesalahan pada proses penyimpanan, data gagal diubah", flash_code.DANGER)
+            form = RpsForm(
+                data={
+                    'rps_id': rps_id,
+                    'matakuliah_id': matakuliah_id,
+                    'kompetensi_dasar': form.kompetensi_dasar.data,
+                    'indikator_capaian': form.indikator_capaian.data,
+                    'materi': form.materi.data
+                }
+            )
+    else:
+        form = RpsForm(
+            data={
+                'rps_id': rps_id,
+                'matakuliah_id': matakuliah_id,
+                'kompetensi_dasar': rps.kompetensi_dasar,
+                'indikator_capaian': rps.indikator_capaian,
+                'materi': rps.materi
+            }
+        )
+    return render_template("rps/form.html", form=form, page_title="Ubah RPS", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode)
