@@ -8,6 +8,12 @@
 
 {% block content_title %}Pengusulan{% endblock %}
 
+{% block button_insert %}
+<a href="{{ url_for('pengusulan.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-plus fa-sm text-white-50"></i> Buat Data Baru
+</a>
+{% endblock %}
+
 {% block content %}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -38,12 +44,16 @@
         <tbody>
           {% for pengusulan in pengusulans %}  
           <tr>
-            <td>{{ pengusulan.tanggal_pengusulan }}</td>
+            <td>{{ pengusulan.tanggal_pengusulan.strftime("%d/%m/%Y %H:%M:%S") }}</td>
             <td>{{ pengusulan.pengarang }}</td>
             <td>{{ pengusulan.judul }}</td>
-            <td>{{ pengusulan.status }}</td>
+            <td>{{ pengusulan.display_status() }}</td>
             <td>
+                {% if pengusulan.status == pengusulan_code.DIUSULKAN %}
+                <a href="#" class="btn btn-danger btn-user btn-block">Batalkan</button>
+                {% else %}
                 <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                {% endif %}
             </td>
           </tr>
           {% endfor %}
