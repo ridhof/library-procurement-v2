@@ -49,7 +49,7 @@
             <td>{{ rps.indikator_capaian }}</td>
             <td>{{ rps.materi }}</td>
             <td>
-                <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                <a href="{{ url_for('rps.update', matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, rps_id=rps.id) }}" class="btn btn-primary btn-user btn-block">Update</button>
             </td>
           </tr>
           {% endfor %}
