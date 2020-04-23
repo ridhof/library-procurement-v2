@@ -5,8 +5,9 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.mod_auth.models import Staff
 from app.mod_pengusulan.models import Pengusulan, Relevansi
+from app.mod_pengusulan.forms import PengusulanBaruForm
 
-from common import flash_code
+from common import flash_code, pengusulan_code
 
 
 MOD_PENGUSULAN = Blueprint('pengusulan', __name__, url_prefix='/pengusulan/')
@@ -22,4 +23,30 @@ def table():
         return redirect(url_for('auth.login'))
 
     pengusulans = Pengusulan.get_by_staff(user.id)
-    return render_template("pengusulan/table.html", pengusulans=pengusulans)
+    return render_template("pengusulan/table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code)
+
+@MOD_PENGUSULAN.route('baru', methods=['GET', 'POST'])
+def create():
+    """
+    Return Create Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    form = PengusulanBaruForm(request.form)
+    if form.validate_on_submit():
+        pengusulan = Pengusulan(
+            pengarang=form.pengarang.data,
+            judul=form.judul.data,
+            pengusul_id=form.pengusul_id.data
+        )
+
+        if pengusulan.insert():
+            flash(f"Pengusulan berhasil disimpan", flash_code.SUCCESS)
+            return redirect(url_for('pengusulan.create'))
+        else:
+            flash(f"Gagal menambahkan data, terjadi kesalahan", flash_code.DANGER)
+
+    form.pengusul_id.data = user.id
+    return render_template("pengusulan/form/baru.html", form=form, page_title="Buat Pengusulan Baru")
