@@ -3,7 +3,7 @@ Pengusulan's Models
 """
 from app import DB as db
 from app.models import Base
-from common import flash_code
+from common import flash_code, pengusulan_code
 
 
 class Pengusulan(Base):
@@ -37,8 +37,22 @@ class Pengusulan(Base):
     def __repr__(self):
         return '<Pengusulan %r>' % (self.id)
 
+    def display_status(self):
+        if self.status == pengusulan_code.DIUSULKAN:
+            return 'Menunggu Verifikasi Kepala Unit'
+        return self.status
+
     def get_by_staff(staff_id):
         return Pengusulan.query.filter_by(pengusul_id=staff_id, is_delete=0).all()
+
+    def insert(self):
+        try:
+            self.status = pengusulan_code.DIUSULKAN
+            db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
 
 
 class Relevansi(Base):
