@@ -98,3 +98,13 @@ def update(matakuliah_id, matakuliah_kode, rps_id):
             }
         )
     return render_template("rps/form.html", form=form, page_title="Ubah RPS", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode)
+
+@MOD_RPS.route('<matakuliah_id>/<matakuliah_kode>/hapus/<rps_id>', methods=['GET'])
+def delete(matakuliah_id, matakuliah_kode, rps_id):
+    rps_delete = Rps.delete(rps_id)
+    if rps_delete:
+        flash(f"RPS telah berhasil dihapus", flash_code.SUCCESS)
+        return redirect(url_for("rps.table", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode))
+    else:
+        flash(f"Terjadi kesalahan, RPS gagal dihapus", flash_code.DANGER)
+        return redirect(url_for("rps.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, rps_id=rps_id))
