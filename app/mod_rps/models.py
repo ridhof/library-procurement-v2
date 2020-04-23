@@ -32,9 +32,27 @@ class Rps(Base):
     def get_by_matakuliah_id(matakuliah_id):
         return Rps.query.filter_by(matakuliah_id=matakuliah_id, is_delete=0).all()
 
+    def get_by_id(rps_id):
+        return Rps.query.filter_by(id=rps_id, is_delete=0).first()
+
     def insert(self):
         try:
             db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
+
+    def update(rps_id, kompetensi_dasar=None, indikator_capaian=None, materi=None):
+        try:
+            rps = Rps.query.filter_by(id=rps_id, is_delete=0).first()
+            if kompetensi_dasar is not None:
+                rps.kompetensi_dasar = kompetensi_dasar
+            if indikator_capaian is not None:
+                rps.indikator_capaian = indikator_capaian
+            if materi is not None:
+                rps.materi = materi
+            db.session.add(rps)
             db.session.commit()
             return True
         except:
