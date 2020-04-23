@@ -57,3 +57,13 @@ class Rps(Base):
             return True
         except:
             return False
+
+    def delete(rps_id):
+        try:
+            rps = Rps.query.filter_by(id=rps_id).first()
+            rps.is_delete = 1
+            db.session.add(rps)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
