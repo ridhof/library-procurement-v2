@@ -45,12 +45,15 @@ class Pengusulan(Base):
     def get_by_staff(staff_id):
         return Pengusulan.query.filter_by(pengusul_id=staff_id, is_delete=0).all()
 
-    def insert(self):
+    def insert(self, matakuliah_ids=[]):
         try:
             self.status = pengusulan_code.DIUSULKAN
             db.session.add(self)
             db.session.commit()
-            return True
+
+            if Relevansi.bulk_insert(pengusulan_id=self.id, matakuliah_ids=matakuliah_ids):
+                return True
+            return False
         except:
             return False
 
@@ -70,3 +73,15 @@ class Relevansi(Base):
 
     def __repr__(self):
         return '<Relevansi %r>' % (self.id)
+
+    def bulk_insert(pengusulan_id, matakuliah_ids=[]):
+        try:
+            list_relevansi = []
+            for matakuliah_id in matakuliah_ids:
+                relevansi = Relevansi(pengusulan_id, matakuliah_id)
+                list_relevansi.append(relevansi)
+            db.session.bulk_save_objects(list_relevansi)
+            db.session.commit()
+            return True
+        except:
+            return False
