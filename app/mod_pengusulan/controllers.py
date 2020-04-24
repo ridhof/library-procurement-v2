@@ -23,7 +23,22 @@ def table():
         return redirect(url_for('auth.login'))
 
     pengusulans = Pengusulan.get_by_staff(user.id)
-    return render_template("pengusulan/table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code)
+    return render_template("pengusulan/table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, user=user)
+
+@MOD_PENGUSULAN.route('kelola/', methods=['GET'])
+def manage():
+    """
+    Return Pengusulan Table Manage Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+    
+    if user.get_unit_role() == 'staff':
+        return redirect(url_for('pengusulan.table'))
+
+    pengusulans = Pengusulan.get_by_unit(user.unit_id)
+    return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code)
 
 @MOD_PENGUSULAN.route('baru', methods=['GET', 'POST'])
 def create():
