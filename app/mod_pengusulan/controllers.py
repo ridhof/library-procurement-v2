@@ -51,3 +51,12 @@ def create():
 
     form.pengusul_id.data = user.id
     return render_template("pengusulan/form/baru.html", form=form, page_title="Buat Pengusulan Baru")
+
+@MOD_PENGUSULAN.route('<pengusulan_id>/hapus', methods=['GET'])
+def delete(pengusulan_id):
+    pengusulan_delete = Pengusulan.delete(pengusulan_id)
+    if pengusulan_delete:
+        flash(f"Pengusulan telah dibatalkan", flash_code.SUCCESS)
+    else:
+        flash(f"Terjadi kesalahan, Pengusulan gagal dibatalkan", flash_code.DANGER)
+    return redirect(url_for("pengusulan.table"))

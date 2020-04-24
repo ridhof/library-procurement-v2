@@ -57,6 +57,16 @@ class Pengusulan(Base):
         except:
             return False
 
+    def delete(pengusulan_id):
+        try:
+            pengusulan = Pengusulan.query.filter_by(id=pengusulan_id).first()
+            pengusulan.is_delete = 1
+            db.session.add(pengusulan)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
+
 
 class Relevansi(Base):
 
