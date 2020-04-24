@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Tabel Pengusulan{% endblock %}
+
+{% block style_libs %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content_title %}Pengusulan{% endblock %}
+
+{% block button_insert %}
+<a href="{{ url_for('pengusulan.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    &larr; Kembali ke Tabel Pengusulan
+</a>
+{% endblock %}
+
+{% block content %}
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Tabel Pengusulan</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Pengarang</th>
+            <th>Judul</th>
+            <th>Pengusul</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>Tanggal</th>
+            <th>Pengarang</th>
+            <th>Judul</th>
+            <th>Pengusul</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </tfoot>
+        <tbody>
+          {% for pengusulan in pengusulans %}  
+          <tr>
+            <td>{{ pengusulan.tanggal_pengusulan.strftime("%d/%m/%Y %H:%M:%S") }}</td>
+            <td>{{ pengusulan.pengarang }}</td>
+            <td>{{ pengusulan.judul }}</td>
+            <td>{{ pengusulan.display_pengusul() }}</td>
+            <td>{{ pengusulan.display_status() }}</td>
+            <td>
+                {% if pengusulan.status == pengusulan_code.DIUSULKAN %}
+                <a href="#" class="btn btn-primary btn-user btn-block">Aksi</button>
+                {% else %}
+                <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- /.container-fluid -->
+{% endblock %}
+
+{% block scripts_libs %}
+<!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{{ url_for('static', filename='js/demo/datatables/first-index-desc.js') }}"></script>
+{% endblock %}
