@@ -3,6 +3,7 @@ Pengusulan's Models
 """
 from app import DB as db
 from app.models import Base
+from app.mod_auth.models import Staff
 from common import flash_code, pengusulan_code
 
 
@@ -42,6 +43,19 @@ class Pengusulan(Base):
             return 'Menunggu Verifikasi Kepala Unit'
         return self.status
 
+    def display_pengusul(self):
+        staff = Staff.query.filter_by(id=self.pengusul_id).first()
+        return f"{ staff.npk } - { staff.nama }"
+
+    def get_by_unit(unit_id, status=pengusulan_code.DIUSULKAN):
+        staffs = Staff.query.filter_by(unit_id=unit_id, is_delete=0).all()
+        pengusulans = []
+
+        for staff in staffs:
+            for pengusulan in Pengusulan.query.filter_by(pengusul_id=staff.id, status=status, is_delete=0).all():
+                pengusulans.append(pengusulan)
+        return pengusulans
+        
     def get_by_staff(staff_id):
         return Pengusulan.query.filter_by(pengusul_id=staff_id, is_delete=0).all()
 
