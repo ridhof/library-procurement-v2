@@ -53,13 +53,18 @@
               {{ render_field(form.pengusul_id) }}
 
               <div class="form-group">
-                <label for="kode">Pengarang:</label>
+                <label for="pengarang">Pengarang:</label>
                 {{ render_field(form.pengarang, class="form-control form-control-user", placeholder="Graham, B., & Dodd, D. L.", type="text", maxlength="70") }}
               </div>
 
               <div class="form-group">
-                <label for="kode">Judul:</label>
+                <label for="judul">Judul:</label>
                 {{ render_field(form.judul, class="form-control form-control-user", placeholder="Security analysis: principles and technique", type="text", maxlength="120") }}
+              </div>
+
+              <div class="form-group">
+                <label for="matakuliah">Matakuliah: <br>(Untuk memilih lebih dari satu matakuliah, klik matakuliah yang hendak ditambahkan sambil menahan tombol Ctrl pada Windows atau tombol Command pada Mac)</label>
+                {{ render_field(form.matakuliah, size=5, multiple=True) }}
               </div>
 
               <button class="btn btn-primary btn-user btn-block text-uppercase font-weight-bold" type="submit" name="submit">
