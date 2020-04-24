@@ -35,14 +35,15 @@ def create():
         return redirect(url_for('auth.login'))
 
     form = PengusulanBaruForm(request.form)
-    if form.validate_on_submit():
+    form.set_matakuliah(user.unit_id)
+    if form.is_submitted():
         pengusulan = Pengusulan(
             pengarang=form.pengarang.data,
             judul=form.judul.data,
             pengusul_id=form.pengusul_id.data
         )
 
-        if pengusulan.insert():
+        if pengusulan.insert(form.matakuliah.data):
             flash(f"Pengusulan berhasil disimpan", flash_code.SUCCESS)
             return redirect(url_for('pengusulan.create'))
         else:
