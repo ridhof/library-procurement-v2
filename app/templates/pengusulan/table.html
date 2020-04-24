@@ -9,9 +9,16 @@
 {% block content_title %}Pengusulan{% endblock %}
 
 {% block button_insert %}
-<a href="{{ url_for('pengusulan.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Pengusulan Baru
-</a>
+<div>
+  {% if user.get_unit_role() != 'staff' %}
+  <a href="{{ url_for('pengusulan.manage') }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Kelola Pengusulan Unit
+  </a>
+  {% endif %}
+  <a href="{{ url_for('pengusulan.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+      <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Pengusulan Baru
+  </a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -71,5 +78,5 @@
 <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 <!-- Page level custom scripts -->
-<script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demo/datatables/first-index-desc.js') }}"></script>
 {% endblock %}
