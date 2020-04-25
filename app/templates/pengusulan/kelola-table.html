@@ -53,9 +53,8 @@
             <td>{{ pengusulan.display_status() }}</td>
             <td>
                 {% if pengusulan.status == pengusulan_code.DIUSULKAN %}
-                <a href="#" class="btn btn-primary btn-user btn-block">Aksi</button>
-                {% else %}
-                <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
+                <a href="{{ url_for('pengusulan.approve', pengusulan_id=pengusulan.id, status=pengusulan_code.DISETUJUI_UNIT) }}" class="btn btn-primary btn-user btn-block">Setuju</button>
+                <a href="{{ url_for('pengusulan.approve', pengusulan_id=pengusulan.id, status=pengusulan_code.DITOLAK_UNIT) }}" class="btn btn-danger btn-user btn-block">Tolak</button>
                 {% endif %}
             </td>
           </tr>
