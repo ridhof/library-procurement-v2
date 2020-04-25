@@ -43,6 +43,10 @@ class Pengusulan(Base):
     def display_status(self):
         if self.status == pengusulan_code.DIUSULKAN:
             return 'Menunggu Verifikasi Kepala Unit'
+        elif self.status == pengusulan_code.DISETUJUI_UNIT:
+            return 'Menunggu Verifikasi Unit Perpustakaan'
+        elif self.status == pengusulan_code.DITOLAK_UNIT:
+            return 'Pengusulan Ditolak'
         return self.status
 
     def display_pengusul(self):
@@ -53,9 +57,14 @@ class Pengusulan(Base):
         staffs = Staff.query.filter_by(unit_id=unit_id, is_delete=0).all()
         pengusulans = []
 
-        for staff in staffs:
-            for pengusulan in Pengusulan.query.filter_by(pengusul_id=staff.id, status=status, is_delete=0).all():
-                pengusulans.append(pengusulan)
+        if status == pengusulan_code.DIUSULKAN:
+            for staff in staffs:
+                for pengusulan in Pengusulan.query.filter_by(pengusul_id=staff.id, status=status, is_delete=0).all():
+                    pengusulans.append(pengusulan)
+        else:
+            for staff in staffs:
+                for pengusulan in Pengusulan.query.filter_by(pengusul_id=staff.id, is_delete=0).all():
+                    pengusulans.append(pengusulan)
         return pengusulans
         
     def get_by_staff(staff_id):
