@@ -40,6 +40,30 @@ def manage():
     pengusulans = Pengusulan.get_by_unit(user.unit_id)
     return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code)
 
+@MOD_PENGUSULAN.route('kelola/<pengusulan_id>/<status>')
+def approve(pengusulan_id, status):
+    """
+    Run Pengusulan Approval Functions
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    if user.get_unit_role() == 'staff':
+        flash(f"Anda tidak memiliki akses untuk melakukan approval pengusulan", flash_code.WARNING)
+        return redirect(url_for('pengusulan.table'))
+
+    pengusulan_approve = Pengusulan.approve(
+        pengusulan_id=pengusulan_id,
+        status=status,
+        petugas_id=user.id
+    )
+    if pengusulan_approve:
+        flash(f"Status Pengusulan Buku telah berhasil diperbarui", flash_code.SUCCESS)
+    else:
+        flash(f"Status Pengusulan Buku gagal diperbarui", flash_code.DANGER)
+    return redirect(url_for('pengusulan.manage'))
+
 @MOD_PENGUSULAN.route('baru', methods=['GET', 'POST'])
 def create():
     """
