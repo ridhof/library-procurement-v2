@@ -1,6 +1,8 @@
 """
 Pengusulan's Models
 """
+import datetime
+
 from app import DB as db
 from app.models import Base
 from app.mod_auth.models import Staff
@@ -75,6 +77,26 @@ class Pengusulan(Base):
         try:
             pengusulan = Pengusulan.query.filter_by(id=pengusulan_id).first()
             pengusulan.is_delete = 1
+            db.session.add(pengusulan)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
+
+    def approve(pengusulan_id, status, petugas_id):
+        try:
+            pengusulan = Pengusulan.query.filter_by(id=pengusulan_id, is_delete=0).first()
+            if pengusulan.status != pengusulan_code.DIUSULKAN:
+                return False
+            
+            if status == pengusulan_code.DISETUJUI_UNIT:
+                pengusulan.status = pengusulan_code.DISETUJUI_UNIT
+                pengusulan.tanggal_disetujui_unit = datetime.datetime.now()
+            elif status == pengusulan_code.DITOLAK_UNIT:
+                pengusulan.status = pengusulan_code.DITOLAK_UNIT
+                pengusulan.tanggal_selesai = datetime.datetime.now()
+            pengusulan.petugas_unit_id = petugas_id
+
             db.session.add(pengusulan)
             db.session.commit()
             return True
