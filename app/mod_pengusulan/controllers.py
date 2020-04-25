@@ -38,7 +38,25 @@ def manage():
         return redirect(url_for('pengusulan.table'))
 
     pengusulans = Pengusulan.get_by_unit(user.unit_id)
-    return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code)
+    return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=pengusulan_code.DIUSULKAN)
+
+@MOD_PENGUSULAN.route('kelola/semua', methods=['GET'])
+def manage_all():
+    """
+    Return All Pengusulan Table Manage Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    if user.get_unit_role() == 'staff':
+        return redirect(url_for('pengusulan.table'))
+
+    pengusulans = Pengusulan.get_by_unit(
+        unit_id=user.unit_id,
+        status=None
+    )
+    return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=None)
 
 @MOD_PENGUSULAN.route('kelola/<pengusulan_id>/<status>')
 def approve(pengusulan_id, status):
