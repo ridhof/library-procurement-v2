@@ -9,9 +9,21 @@
 {% block content_title %}Pengusulan{% endblock %}
 
 {% block button_insert %}
-<a href="{{ url_for('pengusulan.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    &larr; Kembali ke Tabel Pengusulan
-</a>
+<div>
+  <a href="{{ url_for('pengusulan.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+      &larr; Kembali ke Tabel Pengusulan
+  </a>
+
+  {% if status == pengusulan_code.DIUSULKAN %}
+  <a href="{{ url_for('pengusulan.manage_all') }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Semua Pengusulan Unit
+  </a>
+  {% elif status == None %}
+  <a href="{{ url_for('pengusulan.manage') }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Kelola Pengusulan Unit
+  </a>
+  {% endif %}
+</div>
 {% endblock %}
 
 {% block content %}
