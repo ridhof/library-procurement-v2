@@ -6,10 +6,13 @@ Flask-Script
 Flask-SQLAlchemy
 Flask-WTF
 gunicorn
+inflect
+nltk
 pylint
 PyMySQL
 python-dotenv
 redis
 requests
 rq
+Sastrawi
 six
