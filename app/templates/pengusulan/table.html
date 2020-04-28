@@ -58,8 +58,6 @@
             <td>
                 {% if pengusulan.status == pengusulan_code.DIUSULKAN %}
                 <a href="{{ url_for('pengusulan.delete', pengusulan_id=pengusulan.id) }}" class="btn btn-danger btn-user btn-block">Batalkan</button>
-                {% else %}
-                <a href="#" class="btn btn-primary btn-user btn-block">Update</button>
                 {% endif %}
             </td>
           </tr>
