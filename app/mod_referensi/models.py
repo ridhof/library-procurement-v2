@@ -1,7 +1,9 @@
 """
 Referensi's Models
 """
-from app import DB as db
+from flask import url_for
+from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
+from app.mod_referensi.tasks import preprocess_referensi
 from app.models import Base
 from common import flash_code
 
@@ -37,6 +39,12 @@ class Referensi(Base):
         try:
             db.session.add(self)
             db.session.commit()
+            task = rqueue.enqueue(
+                preprocess_referensi,
+                self.pengarang,
+                self.judul,
+                url_for('referensi.store_preprocess', referensi_id=self.id)
+            )
             return True
         except:
             return False
@@ -52,6 +60,14 @@ class Referensi(Base):
                 referensi.keterangan = keterangan
             db.session.add(referensi)
             db.session.commit()
+
+            task = rqueue.enqueue(
+                preprocess_referensi,
+                referensi.pengarang,
+                referensi.judul,
+                url_for('referensi.store_preprocess', referensi_id=referensi.id)
+            )
+
             return True
         except:
             return False
@@ -60,6 +76,16 @@ class Referensi(Base):
         try:
             referensi = Referensi.query.filter_by(id=referensi_id).first()
             referensi.is_delete = 1
+            db.session.add(referensi)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
+
+    def store_preprocessed(referensi_id, preprocessed_keterangan):
+        try:
+            referensi = Referensi.query.filter_by(id=referensi_id).first()
+            referensi.preprocessed_keterangan = preprocessed_keterangan
             db.session.add(referensi)
             db.session.commit()
             return True
