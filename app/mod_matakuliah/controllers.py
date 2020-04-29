@@ -141,3 +141,15 @@ def delete(matakuliah_id, matakuliah_kode):
     else:
         flash(f"Terjadi kesalahan, matakuliah dengan kode { matakuliah_kode } gagal dihapus", flash_code.DANGER)
         return redirect(url_for("matakuliah.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode))
+
+@MOD_MATAKULIAH.route('<matakuliah_id>/preprocess/simpan', methods=['POST'])
+def store_preprocess(matakuliah_id):
+    """
+    Store Preprocessed Matakuliah
+    """
+    if request.method == 'POST':
+        preprocessed_deskripsi = request.form['preprocessed_deskripsi']
+        preprocessed_standar = request.form['preprocessed_standar']
+        if Matakuliah.store_preprocessed(matakuliah_id, preprocessed_deskripsi, preprocessed_standar):
+          return f'Berhasil disimpan'
+    return f'Gagal melakukan penyimpanan'

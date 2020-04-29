@@ -1,7 +1,9 @@
 """
 Matakuliah's Models
 """
-from app import DB as db
+from flask import url_for
+from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
+from app.mod_matakuliah.tasks import preprocess_matakuliah
 from app.models import Base
 from common import flash_code
 
@@ -54,6 +56,12 @@ class Matakuliah(Base):
         try:
             db.session.add(self)
             db.session.commit()
+            task = rqueue.enqueue(
+                preprocess_matakuliah, 
+                self.deskripsi_singkat, 
+                self.standar_kompetensi,
+                url_for('matakuliah.store_preprocess', matakuliah_id=self.id)
+            )
             return True
         except:
             return False
@@ -83,6 +91,17 @@ class Matakuliah(Base):
         try:
             matakuliah = Matakuliah.query.filter_by(id=matakuliah_id).first()
             matakuliah.is_delete = 1
+            db.session.add(matakuliah)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
+
+    def store_preprocessed(matakuliah_id, preprocessed_deskripsi, preprocessed_standar):
+        try:
+            matakuliah = Matakuliah.query.filter_by(id=matakuliah_id).first()
+            matakuliah.preprocessed_deskripsi = preprocessed_deskripsi
+            matakuliah.preprocessed_standar = preprocessed_standar
             db.session.add(matakuliah)
             db.session.commit()
             return True
