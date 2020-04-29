@@ -108,3 +108,16 @@ def delete(matakuliah_id, matakuliah_kode, rps_id):
     else:
         flash(f"Terjadi kesalahan, RPS gagal dihapus", flash_code.DANGER)
         return redirect(url_for("rps.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, rps_id=rps_id))
+
+@MOD_RPS.route('<rps_id>/preprocess/simpan', methods=['POST'])
+def store_preprocess(rps_id):
+    """
+    Store Preprocessed RPS
+    """
+    if request.method == 'POST':
+        preprocessed_kompetensi = request.form['preprocessed_kompetensi']
+        preprocessed_indikator = request.form['preprocessed_indikator']
+        preprocessed_materi = request.form['preprocessed_materi']
+        if Rps.store_preprocessed(rps_id, preprocessed_kompetensi, preprocessed_indikator, preprocessed_materi):
+            return f'Berhasil disimpan'
+    return f'Gagal melakukan penyimpanan'
