@@ -1,7 +1,9 @@
 """
 RPS's Models
 """
-from app import DB as db
+from flask import url_for
+from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
+from app.mod_rps.tasks import preprocess_rps
 from app.models import Base
 from common import flash_code
 
@@ -39,6 +41,15 @@ class Rps(Base):
         try:
             db.session.add(self)
             db.session.commit()
+
+            task = rqueue.enqueue(
+                preprocess_rps,
+                self.kompetensi_dasar,
+                self.indikator_capaian,
+                self.materi,
+                url_for('rps.store_preprocess', rps_id=self.id)
+            )
+
             return True
         except:
             return False
@@ -54,6 +65,15 @@ class Rps(Base):
                 rps.materi = materi
             db.session.add(rps)
             db.session.commit()
+
+            task = rqueue.enqueue(
+                preprocess_rps,
+                rps.kompetensi_dasar,
+                rps.indikator_capaian,
+                rps.materi,
+                url_for('rps.store_preprocess', rps_id=rps.id)
+            )
+
             return True
         except:
             return False
@@ -62,6 +82,18 @@ class Rps(Base):
         try:
             rps = Rps.query.filter_by(id=rps_id).first()
             rps.is_delete = 1
+            db.session.add(rps)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
+
+    def store_preprocessed(rps_id, preprocessed_kompetensi, preprocessed_indikator, preprocessed_materi):
+        try:
+            rps = Rps.query.filter_by(id=rps_id).first()
+            rps.preprocessed_kompetensi = preprocessed_kompetensi
+            rps.preprocessed_indikator = preprocessed_indikator
+            rps.preprocessed_materi = preprocessed_materi
             db.session.add(rps)
             db.session.commit()
             return True
