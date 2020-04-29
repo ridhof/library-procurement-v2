@@ -83,6 +83,14 @@ class Matakuliah(Base):
                 matakuliah.set_kurikulum(f"{tahun_ajaran}-{kurikulum}")
             db.session.add(matakuliah)
             db.session.commit()
+
+            task = rqueue.enqueue(
+                preprocess_matakuliah, 
+                matakuliah.deskripsi_singkat, 
+                matakuliah.standar_kompetensi,
+                url_for('matakuliah.store_preprocess', matakuliah_id=matakuliah.id)
+            )
+
             return True
         except:
             return False
