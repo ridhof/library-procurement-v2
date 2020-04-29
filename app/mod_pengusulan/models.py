@@ -2,8 +2,10 @@
 Pengusulan's Models
 """
 import datetime
+from flask import url_for
 
-from app import DB as db
+from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
+from app.mod_pengusulan.tasks import preprocess_pengusulan
 from app.models import Base
 from app.mod_auth.models import Staff
 from common import flash_code, pengusulan_code
@@ -76,6 +78,12 @@ class Pengusulan(Base):
             db.session.add(self)
             db.session.commit()
 
+            task = rqueue.enqueue(
+                preprocess_pengusulan,
+                self.judul,
+                url_for('pengusulan.store_preprocess', pengusulan_id=self.id)
+            )
+
             if Relevansi.bulk_insert(pengusulan_id=self.id, matakuliah_ids=matakuliah_ids):
                 return True
             return False
@@ -106,6 +114,16 @@ class Pengusulan(Base):
                 pengusulan.tanggal_selesai = datetime.datetime.now()
             pengusulan.petugas_unit_id = petugas_id
 
+            db.session.add(pengusulan)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
+
+    def store_preprocessed(pengusulan_id, preprocessed_judul):
+        try:
+            pengusulan = Pengusulan.query.filter_by(id=pengusulan_id).first()
+            pengusulan.preprocessed_judul = preprocessed_judul
             db.session.add(pengusulan)
             db.session.commit()
             return True
