@@ -108,3 +108,14 @@ def delete(matakuliah_id, matakuliah_kode, referensi_id):
     else:
         flash(f"Terjadi kesalahan, referensi gagal dihapus", flash_code.DANGER)
         return redirect(url_for("referensi.update", matakuliah_id=matakuliah_id, matakuliah_kode=matakuliah_kode, referensi_id=referensi_id))
+
+@MOD_REFERENSI.route('<referensi_id>/preprocess/simpan', methods=['POST'])
+def store_preprocess(referensi_id):
+    """
+    Store Preprocessed Referensi
+    """
+    if request.method == 'POST':
+        preprocessed_keterangan = request.form['preprocessed_keterangan']
+        if Referensi.store_preprocessed(referensi_id, preprocessed_keterangan):
+            return f'Berhasil disimpan'
+    return f'Gagal melakukan penyimpanan'
