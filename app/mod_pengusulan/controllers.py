@@ -117,3 +117,14 @@ def delete(pengusulan_id):
     else:
         flash(f"Terjadi kesalahan, Pengusulan gagal dibatalkan", flash_code.DANGER)
     return redirect(url_for("pengusulan.table"))
+
+@MOD_PENGUSULAN.route('<pengusulan_id>/preprocess/simpan', methods=['POST'])
+def store_preprocess(pengusulan_id):
+    """
+    Store Preprocessed Pengusulan
+    """
+    if request.method == 'POST':
+        preprocessed_judul = request.form['preprocessed_judul']
+        if Pengusulan.store_preprocessed(pengusulan_id, preprocessed_judul):
+            return f'Berhasil disimpan'
+    return f'Gagal melakukan penyimpanan'
