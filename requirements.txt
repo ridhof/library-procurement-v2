@@ -15,4 +15,5 @@ redis
 requests
 rq
 Sastrawi
+scikit-learn
 six
