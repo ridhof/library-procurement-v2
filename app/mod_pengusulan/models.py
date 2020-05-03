@@ -5,9 +5,12 @@ import datetime
 from flask import url_for
 
 from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
-from app.mod_pengusulan.tasks import preprocess_pengusulan
+from app.mod_pengusulan.tasks import preprocess_pengusulan, count_similarity
 from app.models import Base
 from app.mod_auth.models import Staff
+from app.mod_matakuliah.models import Matakuliah
+from app.mod_referensi.models import Referensi
+from app.mod_rps.models import Rps
 from common import flash_code, pengusulan_code
 
 
@@ -120,6 +123,42 @@ class Pengusulan(Base):
         except Exception:
             return False
 
+    def calculate_similarity(self):
+        try:
+            relevansis = Relevansi.query.filter_by(pengusulan_buku_id=self.id).all()
+            
+            queries = []
+            urls = []
+            for relevansi in relevansis:
+                matakuliah = Matakuliah.query.filter_by(id=relevansi.matakuliah_id).first()
+
+                rps_query = []
+                rpses = Rps.query.filter_by(matakuliah_id=matakuliah.id).all()
+                for rps in rpses:
+                    rps_query.append(f"{rps.preprocessed_kompetensi} {rps.preprocessed_indikator} {rps.preprocessed_materi}")
+                rps_text = " ".join(rps_query)
+
+                referensi_query = []
+                referensis = Referensi.query.filter_by(matakuliah_id=matakuliah.id).all()
+                for referensi in referensis:
+                    referensi_query.append(f"{referensi.preprocessed_keterangan}")
+                referensi_text = " ".join(referensi_query)
+
+                query = f"{matakuliah.preprocessed_deskripsi} {matakuliah.preprocessed_standar} {rps_text} {referensi_text}"
+                queries.append(query)
+                urls.append(url_for('pengusulan.store_score', relevansi_id=relevansi.id))
+
+            task = rqueue.enqueue(
+                count_similarity,
+                self.preprocessed_judul,
+                queries,
+                urls
+            )
+            
+            return True
+        except Exception:
+            return False
+
     def store_preprocessed(pengusulan_id, preprocessed_judul):
         try:
             pengusulan = Pengusulan.query.filter_by(id=pengusulan_id).first()
@@ -154,6 +193,16 @@ class Relevansi(Base):
                 relevansi = Relevansi(pengusulan_id, matakuliah_id)
                 list_relevansi.append(relevansi)
             db.session.bulk_save_objects(list_relevansi)
+            db.session.commit()
+            return True
+        except:
+            return False
+
+    def store_score(relevansi_id, score):
+        try:
+            relevansi = Relevansi.query.filter_by(id=relevansi_id).first()
+            relevansi.nilai_distance = score
+            db.session.add(relevansi)
             db.session.commit()
             return True
         except:
