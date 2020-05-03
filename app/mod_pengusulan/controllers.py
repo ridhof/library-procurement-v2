@@ -126,5 +126,19 @@ def store_preprocess(pengusulan_id):
     if request.method == 'POST':
         preprocessed_judul = request.form['preprocessed_judul']
         if Pengusulan.store_preprocessed(pengusulan_id, preprocessed_judul):
+            pengusulan = Pengusulan.query.filter_by(id=pengusulan_id).first()
+            if not pengusulan.calculate_similarity():
+                print("gagal menyimpan")
+            return f'Berhasil disimpan'
+    return f'Gagal melakukan penyimpanan'
+
+@MOD_PENGUSULAN.route('<relevansi_id>/score/simpan', methods=['POST'])
+def store_score(relevansi_id):
+    """
+    Store Process Score
+    """
+    if request.method == 'POST':
+        score = request.form['score']
+        if Relevansi.store_score(relevansi_id, score):
             return f'Berhasil disimpan'
     return f'Gagal melakukan penyimpanan'
