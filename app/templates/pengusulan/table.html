@@ -56,6 +56,7 @@
             <td>{{ pengusulan.judul }}</td>
             <td>{{ pengusulan.display_status() }}</td>
             <td>
+                <a href="{{ url_for('pengusulan.relevansi', pengusulan_id=pengusulan.id) }}" class="btn btn-primary btn-user btn-block">Matakuliah</a>
                 {% if pengusulan.status == pengusulan_code.DIUSULKAN %}
                 <a href="{{ url_for('pengusulan.delete', pengusulan_id=pengusulan.id) }}" class="btn btn-danger btn-user btn-block">Batalkan</button>
                 {% endif %}
