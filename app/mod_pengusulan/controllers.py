@@ -58,6 +58,18 @@ def manage_all():
     )
     return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=None)
 
+@MOD_PENGUSULAN.route('<pengusulan_id>/relevansi')
+def relevansi(pengusulan_id):
+    """
+    Return All Relevansi of Pengusulan
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    relevansis = Relevansi.get_by_pengusulan(pengusulan_id)
+    return render_template("pengusulan/relevansi-table.html", relevansis=relevansis)
+
 @MOD_PENGUSULAN.route('kelola/<pengusulan_id>/<status>')
 def approve(pengusulan_id, status):
     """
