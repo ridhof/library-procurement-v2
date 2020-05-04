@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Tabel Pengusulan{% endblock %}
+
+{% block style_libs %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content_title %}Matakuliah Terkait Pengusulan{% endblock %}
+
+{% block button_insert %}
+<div>
+    <a href="{{ url_for('pengusulan.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        &larr; Kembali ke Tabel Pengusulan
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Tabel Matakuliah Terkait Pengusulan Pengusulan</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Matakuliah</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>No</th>
+            <th>Matakuliah</th>
+          </tr>
+        </tfoot>
+        <tbody>
+          {% for relevansi in relevansis %}  
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ relevansi.get_matakuliah_name() }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- /.container-fluid -->
+{% endblock %}
+
+{% block scripts_libs %}
+<!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{{ url_for('static', filename='js/demo/datatables/delete-order.js') }}"></script>
+{% endblock %}
