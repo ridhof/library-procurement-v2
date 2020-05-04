@@ -186,6 +186,13 @@ class Relevansi(Base):
     def __repr__(self):
         return '<Relevansi %r>' % (self.id)
 
+    def get_by_pengusulan(pengusulan_id):
+        return Relevansi.query.filter_by(pengusulan_buku_id=pengusulan_id, is_delete=0).order_by(Relevansi.nilai_distance).all()
+
+    def get_matakuliah_name(self):
+        matakuliah = Matakuliah.query.filter_by(id=self.matakuliah_id).first()
+        return matakuliah.nama
+
     def bulk_insert(pengusulan_id, matakuliah_ids=[]):
         try:
             list_relevansi = []
