@@ -9,6 +9,9 @@
 {% block content_title %}Mahasiswa{% endblock %}
 
 {% block button_insert %}
+<a href="{{ url_for('mahasiswa.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+  <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Data Baru
+</a>
 {% endblock %}
 
 {% block content %}
