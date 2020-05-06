@@ -29,3 +29,14 @@ class Mahasiswa(Base):
     def get_by_unit(unit_id):
         return Mahasiswa.query.filter_by(unit_id=unit_id, is_delete=0).all()
 
+    def nrp_available(nrp):
+        return Mahasiswa.query.filter_by(nrp=nrp, is_delete=0).first()
+
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
+
