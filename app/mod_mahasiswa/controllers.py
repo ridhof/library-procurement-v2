@@ -86,3 +86,12 @@ def update(mahasiswa_id, mahasiswa_nrp):
             'nama': mahasiswa.nama
         })
     return render_template("mahasiswa/form.html", form=form, page_title="Ubah Mahasiswa")
+
+@MOD_MAHASISWA.route('<mahasiswa_id>/<mahasiswa_nrp>/hapus', methods=['GET'])
+def delete(mahasiswa_id, mahasiswa_nrp):
+    if Mahasiswa.delete(mahasiswa_id):
+        flash(f"Mahasiswa dengan NRP { mahasiswa_nrp } telah berhasil dihapus", flash_code.SUCCESS)
+        return redirect(url_for("mahasiswa.table"))
+    else:
+        flash(f"Terjadi kesalahan, mahasiswa dengan NRP { mahasiswa_nrp } gagal dihapus", flash_code.DANGER)
+        return redirect(url_for("mahasiswa.update", mahasiswa_id=mahasiswa_id, mahasiswa_nrp=mahasiswa_nrp))
