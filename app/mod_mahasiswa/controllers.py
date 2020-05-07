@@ -51,3 +51,38 @@ def create():
                 flash(f"Gagal menambahkan data, terjadi kesalahan", flash_code.DANGER)
                 
     return render_template("mahasiswa/form.html", form=form, page_title="Tambah Mahasiswa Baru")
+
+@MOD_MAHASISWA.route('<mahasiswa_id>/<mahasiswa_nrp>/ubah', methods=['GET', 'POST'])
+def update(mahasiswa_id, mahasiswa_nrp):
+    """
+    Return Update Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    mahasiswa = Mahasiswa.get_by_nrp(mahasiswa_nrp)
+    if mahasiswa is None:
+        flash(f"Terjadi kesalahan, Mahasiswa tidak dapat ditemukan", flash_code.WARNING)
+        return redirect(url_for('mahasiswa.table'))
+    
+    form = MahasiswaForm(request.form)
+    if form.validate_on_submit():
+        if mahasiswa.nrp != form.nrp.data:
+            if Mahasiswa.get_by_nrp(form.nrp.data) is not None:
+                flash(f"NRP telah digunakan, gagal mengubah data", flash_code.WARNING)
+                return render_template("mahasiswa/form.html", form=form, page_title="Ubah Mahasiswa")
+        
+        if Mahasiswa.update(form.mahasiswa_id.data, form.nrp.data, form.nama.data):
+            flash(f"Mahasiswa berhasil diubah", flash_code.SUCCESS)
+            return redirect(url_for('mahasiswa.update', mahasiswa_id=mahasiswa_id, mahasiswa_nrp=form.nrp.data))
+        else:
+            flash(f"Terjadi kesalahan, data gagal disimpan", flash_code.DANGER)
+    else:
+        form = MahasiswaForm(data={
+            'mahasiswa_id': mahasiswa.id,
+            'unit_id': mahasiswa.unit_id,
+            'nrp': mahasiswa.nrp,
+            'nama': mahasiswa.nama
+        })
+    return render_template("mahasiswa/form.html", form=form, page_title="Ubah Mahasiswa")
