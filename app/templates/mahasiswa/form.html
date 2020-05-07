@@ -65,6 +65,13 @@
               <button class="btn btn-primary btn-user btn-block text-uppercase font-weight-bold" type="submit" name="submit">
                   Simpan
               </button>
+
+              {% if page_title == 'Ubah Mahasiswa' %}
+              <a href='{{ url_for("mahasiswa.delete", mahasiswa_id=form.mahasiswa_id.data, mahasiswa_nrp=form.nrp.data) }}' 
+                class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
+                  Hapus
+              </a>
+              {% endif %}
           </form>
         </div>
       </div>
