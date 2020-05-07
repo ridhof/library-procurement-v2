@@ -29,6 +29,9 @@ class Mahasiswa(Base):
     def get_by_unit(unit_id):
         return Mahasiswa.query.filter_by(unit_id=unit_id, is_delete=0).all()
 
+    def get_by_nrp(nrp):
+        return Mahasiswa.query.filter_by(nrp=nrp, is_delete=0).first()
+
     def nrp_available(nrp):
         return Mahasiswa.query.filter_by(nrp=nrp, is_delete=0).first()
 
@@ -40,3 +43,13 @@ class Mahasiswa(Base):
         except:
             return False
 
+    def update(mahasiswa_id, nrp, nama):
+        try:
+            mahasiswa = Mahasiswa.query.filter_by(id=mahasiswa_id, is_delete=0).first()
+            mahasiswa.nrp = nrp
+            mahasiswa.nama = nama
+            db.session.add(mahasiswa)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
