@@ -42,7 +42,9 @@
           <tr>
             <td>{{ mahasiswa.nrp }}</td>
             <td>{{ mahasiswa.nama }}</td>
-            <td></td>
+            <td>
+              <a class="btn btn-primary btn-user btn-block" href="{{ url_for('mahasiswa.update', mahasiswa_id=mahasiswa.id, mahasiswa_nrp=mahasiswa.nrp) }}">Update</a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
