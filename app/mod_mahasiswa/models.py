@@ -53,3 +53,13 @@ class Mahasiswa(Base):
             return True
         except Exception:
             return False
+
+    def delete(mahasiswa_id):
+        try:
+            mahasiswa = Mahasiswa.query.filter_by(id=mahasiswa_id).first()
+            mahasiswa.is_delete = 1
+            db.session.add(mahasiswa)
+            db.session.commit()
+            return True
+        except:
+            return False
