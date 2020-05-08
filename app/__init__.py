@@ -62,6 +62,7 @@ def create_app(config):
     from app.mod_rps.controllers import MOD_RPS as rps_module
     from app.mod_pengusulan.controllers import MOD_PENGUSULAN as pengusulan_module
     from app.mod_mahasiswa.controllers import MOD_MAHASISWA as mahasiswa_module
+    from app.mod_buku.controllers import MOD_BUKU as buku_module
 
     # Register blueprints
     APP.register_blueprint(landing_page_module)
@@ -74,6 +75,7 @@ def create_app(config):
     APP.register_blueprint(rps_module)
     APP.register_blueprint(pengusulan_module)
     APP.register_blueprint(mahasiswa_module)
+    APP.register_blueprint(buku_module)
 
     # Build the database:
     # This will create the database file using SQLAlchemy
