@@ -17,3 +17,4 @@ rq
 Sastrawi
 scikit-learn
 six
+xlrd
