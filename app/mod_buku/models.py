@@ -8,6 +8,27 @@ from common import flash_code
 from common.nlp_preprocess import NLP
 
 
+class Buku(Base):
+
+    __tablename__ = 'buku'
+
+    reg_comp = db.Column(db.String(30), nullable=True)
+    judul = db.Column(db.String(120), nullable=True)
+    preprocessed_judul = db.Column(db.String(120), nullable=True)
+
+    dewey_classification_kode = db.Column(db.Integer, nullable=True)
+
+    def __init__(self, reg_comp, judul):
+        self.reg_comp = reg_comp
+        self.judul = judul
+
+    def __repr__(self):
+        return '<Buku %r>' % (self.reg_comp)
+
+    def get_buku():
+        return Buku.query.filter_by(is_delete=0).all()
+
+
 class Dewey(Base):
 
     __tablename__ = 'dewey_classification'
