@@ -11,6 +11,14 @@ import xlrd
 # excel.get_data(column_id=column_index, row_id=row_index) # to get data based on given param
 # excel.get_all_data() # to get all data
 
+# this is how u run:
+# >>> for row in data:
+# ...     nlp = NLP(row[1])
+# ...     preprocessed_nama = nlp.preprocessed_text
+# ...     payload = {'kode': row[0], 'nama': row[1], 'preprocessed_nama': preprocessed_nama}
+# ...     r = requests.post(f"{config.SERVER_URL}/buku/dewey/baru", data=payload)
+# ...     print(f"{r.status_code}: {r.text}")
+
 class Excel():
     path = ""
     sheet = 0
