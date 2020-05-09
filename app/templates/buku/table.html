@@ -43,7 +43,7 @@
             <td>{{ buku.reg_comp }}</td>
             <td>{{ buku.judul }}</td>
             <td>
-              <a class="btn btn-primary btn-user btn-block" href="#">Update</a>
+              <a class="btn btn-primary btn-user btn-block" href="{{ url_for('buku.update', buku_id=buku.id) }}">Update</a>
             </td>
           </tr>
           {% endfor %}
