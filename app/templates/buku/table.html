@@ -9,7 +9,7 @@
 {% block content_title %}Buku{% endblock %}
 
 {% block button_insert %}
-<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+<a href="{{ url_for('buku.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
   <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Data Baru
 </a>
 {% endblock %}
@@ -40,8 +40,8 @@
         <tbody>
           {% for buku in bukus %}  
           <tr>
-            <td>{{ mahasiswa.reg_comp }}</td>
-            <td>{{ mahasiswa.judul }}</td>
+            <td>{{ buku.reg_comp }}</td>
+            <td>{{ buku.judul }}</td>
             <td>
               <a class="btn btn-primary btn-user btn-block" href="#">Update</a>
             </td>
