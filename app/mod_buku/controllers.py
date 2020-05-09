@@ -68,6 +68,7 @@ def update(buku_id):
         if buku.reg_comp != form.reg_comp.data:
             if Buku.regcomp_available(form.reg_comp.data) is not None:
                 flash(f"REG.COMP telah digunakan, gagal mengubah data", flash_code.WARNING)
+                return render_template("buku/form.html", form=form, page_title="Ubah Buku")
 
         if Buku.update(buku_id, form.reg_comp.data, form.judul.data):
             flash(f"Buku berhasil diubah", flash_code.SUCCESS)
@@ -81,6 +82,15 @@ def update(buku_id):
             'judul': buku.judul
         })
     return render_template("buku/form.html", form=form, page_title="Ubah Buku")
+
+@MOD_BUKU.route('<buku_id>/hapus', methods=['GET'])
+def delete(buku_id):
+    if Buku.delete(buku_id):
+        flash(f"Buku telah berhasil dihapus", flash_code.SUCCESS)
+        return redirect(url_for("buku.table"))
+    else:
+        flash(f"Terjadi kesalahan, buku dengan ID { buku_id } gagal dihapus", flash_code.DANGER)
+        return redirect(url_for("buku.update", buku_id=buku_id))
 
 @MOD_BUKU.route('dewey/baru', methods=['POST'])
 def store_dewey():
