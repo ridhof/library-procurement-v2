@@ -25,8 +25,19 @@ class Buku(Base):
     def __repr__(self):
         return '<Buku %r>' % (self.reg_comp)
 
+    def regcomp_available(reg_comp):
+        return Buku.query.filter_by(reg_comp=reg_comp, is_delete=0).first()
+
     def get_buku():
         return Buku.query.filter_by(is_delete=0).all()
+
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
 
 
 class Dewey(Base):
