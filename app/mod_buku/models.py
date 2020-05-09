@@ -28,12 +28,25 @@ class Buku(Base):
     def regcomp_available(reg_comp):
         return Buku.query.filter_by(reg_comp=reg_comp, is_delete=0).first()
 
-    def get_buku():
-        return Buku.query.filter_by(is_delete=0).all()
+    def get_buku(buku_id=None):
+        if buku_id is None:
+            return Buku.query.filter_by(is_delete=0).all()
+        return Buku.query.filter_by(id=buku_id, is_delete=0).first()
 
     def insert(self):
         try:
             db.session.add(self)
+            db.session.commit()
+            return True
+        except:
+            return False
+
+    def update(buku_id, reg_comp, judul):
+        try:
+            buku = Buku.query.filter_by(id=buku_id, is_delete=0).first()
+            buku.reg_comp = reg_comp
+            buku.judul = judul
+            db.session.add(buku)
             db.session.commit()
             return True
         except:
