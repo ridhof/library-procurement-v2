@@ -49,6 +49,39 @@ def create():
     
     return render_template("buku/form.html", form=form, page_title="Tambah Buku Buru")
 
+@MOD_BUKU.route('<buku_id>/ubah', methods=['GET', 'POST'])
+def update(buku_id):
+    """
+    Return Update Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    buku = Buku.get_buku(buku_id=buku_id)
+    if buku is None:
+        flash(f"Buku tidak dapat ditemukan", flash_code.WARNING)
+        return redirect(url_for('buku.table'))
+    
+    form = BukuForm(request.form)
+    if form.validate_on_submit():
+        if buku.reg_comp != form.reg_comp.data:
+            if Buku.regcomp_available(form.reg_comp.data) is not None:
+                flash(f"REG.COMP telah digunakan, gagal mengubah data", flash_code.WARNING)
+
+        if Buku.update(buku_id, form.reg_comp.data, form.judul.data):
+            flash(f"Buku berhasil diubah", flash_code.SUCCESS)
+            return redirect(url_for('buku.update', buku_id=buku_id))
+        else:
+            flash(f"Terjadi kesalahan, data gagal disimpan", flash_code.DANGER)
+    else:
+        form = BukuForm(data={
+            'buku_id': buku.id,
+            'reg_comp': buku.reg_comp,
+            'judul': buku.judul
+        })
+    return render_template("buku/form.html", form=form, page_title="Ubah Buku")
+
 @MOD_BUKU.route('dewey/baru', methods=['POST'])
 def store_dewey():
     """
