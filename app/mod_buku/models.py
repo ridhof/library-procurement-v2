@@ -52,6 +52,15 @@ class Buku(Base):
         except:
             return False
 
+    def delete(buku_id):
+        try:
+            buku = Buku.query.filter_by(id=buku_id).first()
+            buku.is_delete = 1
+            db.session.add(buku)
+            db.session.commit()
+            return True
+        except:
+            return False
 
 class Dewey(Base):
 
