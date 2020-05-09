@@ -92,6 +92,17 @@ def delete(buku_id):
         flash(f"Terjadi kesalahan, buku dengan ID { buku_id } gagal dihapus", flash_code.DANGER)
         return redirect(url_for("buku.update", buku_id=buku_id))
 
+@MOD_BUKU.route('<buku_id>/preprocess/simpan', methods=['POST'])
+def store_preprocess(buku_id):
+    """
+    Store Preprocessed Judul
+    """
+    if request.method == 'POST':
+        preprocessed_judul = request.form['preprocessed_judul']
+        if Buku.store_preprocessed(buku_id, preprocessed_judul):
+            return f'Berhasil disimpan'
+    return f'Gagal melakukan penyimpanan'
+
 @MOD_BUKU.route('dewey/baru', methods=['POST'])
 def store_dewey():
     """
