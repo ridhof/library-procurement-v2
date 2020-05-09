@@ -2,8 +2,9 @@
 Buku & Dewey Class
 """
 from flask import url_for
-from app import DB as db
+from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
 from app.models import Base
+from app.mod_buku.tasks import preprocess_judul
 from common import flash_code
 from common.nlp_preprocess import NLP
 
@@ -37,6 +38,11 @@ class Buku(Base):
         try:
             db.session.add(self)
             db.session.commit()
+            task = rqueue.enqueue(
+                preprocess_judul,
+                self.judul,
+                url_for('buku.store_preprocess', buku_id=self.id)
+            )
             return True
         except:
             return False
@@ -48,6 +54,11 @@ class Buku(Base):
             buku.judul = judul
             db.session.add(buku)
             db.session.commit()
+            task = rqueue.enqueue(
+                preprocess_judul,
+                buku.judul,
+                url_for('buku.store_preprocess', buku_id=buku.id)
+            )
             return True
         except:
             return False
@@ -60,6 +71,16 @@ class Buku(Base):
             db.session.commit()
             return True
         except:
+            return False
+
+    def store_preprocessed(buku_id, preprocessed_judul):
+        try:
+            buku = Buku.query.filter_by(id=buku_id).first()
+            buku.preprocessed_judul = preprocessed_judul
+            db.session.add(buku)
+            db.session.commit()
+            return True
+        except Exception:
             return False
 
 class Dewey(Base):
