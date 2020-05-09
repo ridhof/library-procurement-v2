@@ -67,7 +67,7 @@
               </button>
 
               {% if page_title == 'Ubah Buku' %}
-              <a href='#' 
+              <a href='{{ url_for("buku.delete", buku_id=form.buku_id.data) }}' 
                 class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
                   Hapus
               </a>
