@@ -38,9 +38,13 @@ class Buku(Base):
         try:
             db.session.add(self)
             db.session.commit()
+
+            dewey_text, dewey_id = Dewey.get_queries()
             task = rqueue.enqueue(
                 preprocess_judul,
                 self.judul,
+                dewey_text,
+                dewey_id,
                 url_for('buku.store_preprocess', buku_id=self.id)
             )
             return True
@@ -54,9 +58,13 @@ class Buku(Base):
             buku.judul = judul
             db.session.add(buku)
             db.session.commit()
+
+            dewey_text, dewey_id = Dewey.get_queries()
             task = rqueue.enqueue(
                 preprocess_judul,
                 buku.judul,
+                dewey_text,
+                dewey_id,
                 url_for('buku.store_preprocess', buku_id=buku.id)
             )
             return True
@@ -73,10 +81,11 @@ class Buku(Base):
         except:
             return False
 
-    def store_preprocessed(buku_id, preprocessed_judul):
+    def store_preprocessed(buku_id, preprocessed_judul, dewey_id):
         try:
             buku = Buku.query.filter_by(id=buku_id).first()
             buku.preprocessed_judul = preprocessed_judul
+            buku.dewey_classification_kode = dewey_id
             db.session.add(buku)
             db.session.commit()
             return True
@@ -103,6 +112,17 @@ class Dewey(Base):
     
     def __repr__(self):
         return '<Dewey %r>' % (self.kode)
+
+    def get_queries():
+        deweys = Dewey.query.filter_by(is_delete=0).all()
+        
+        deweys_text = []
+        deweys_id = []
+        for dewey in deweys:
+            deweys_text.append(dewey.preprocessed_nama)
+            deweys_id.append(dewey.id)
+        
+        return deweys_text, deweys_id
 
     def kode_available(self):
         return Dewey.query.filter_by(kode=self.kode, is_delete=0).first()

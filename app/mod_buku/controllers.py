@@ -99,7 +99,8 @@ def store_preprocess(buku_id):
     """
     if request.method == 'POST':
         preprocessed_judul = request.form['preprocessed_judul']
-        if Buku.store_preprocessed(buku_id, preprocessed_judul):
+        dewey_id = request.form['dewey_id']
+        if Buku.store_preprocessed(buku_id, preprocessed_judul, dewey_id):
             return f'Berhasil disimpan'
     return f'Gagal melakukan penyimpanan'
 
