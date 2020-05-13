@@ -9,7 +9,7 @@
 {% block content_title %}Peminjaman{% endblock %}
 
 {% block button_insert %}
-<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+<a href="{{ url_for('peminjaman.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
   <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Data Baru
 </a>
 {% endblock %}
