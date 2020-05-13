@@ -44,10 +44,10 @@
         <tbody>
           {% for peminjaman in peminjamans %}  
           <tr>
-            <td>{{ peminjaman.tanggal_pinjam }}</td>
-            <td>{{ peminjaman.mahasiswa_peminjam_id }}</td>
-            <td>{{ peminjaman.buku_id }}</td>
-            <td>{{ peminjaman.status }}</td>
+            <td>{{ peminjaman.get_tanggal() }}</td>
+            <td>{{ peminjaman.get_pemustaka() }}</td>
+            <td>{{ peminjaman.get_buku() }}</td>
+            <td>{{ peminjaman.status.capitalize() }}</td>
             <td>
               <a class="btn btn-primary btn-user btn-block" href="#">Update</a>
             </td>
