@@ -43,6 +43,10 @@ class Peminjaman(Base):
     def check_buku(reg_comp):
         return Buku.regcomp_available(reg_comp)
 
+    def get_buku(self):
+        buku = Buku.query.filter_by(id=self.buku_id, is_delete=0).first()
+        return buku.judul
+
     def set_pemustaka(self, kode_pemustaka):
         staff = Staff.query.filter_by(npk=kode_pemustaka, is_delete=0).first()
         if staff is not None:
@@ -59,8 +63,21 @@ class Peminjaman(Base):
             return True
         return False
 
+    def get_pemustaka(self):
+        staff = Staff.query.filter_by(id=self.staff_peminjam_id, is_delete=0).first()
+        if staff is not None:
+            return f"Staff {staff.npk}"
+
+        mahasiswa = Mahasiswa.query.filter_by(id=self.mahasiswa_peminjaman_id, is_delete=0).first()
+        if mahasiswa is not None:
+            return f"Mahasiswa {mahasiswa.nrp}"
+
     def get_peminjaman():
         return Peminjaman.query.filter_by(is_delete=0).all()
+
+    def get_tanggal(self):
+        tanggal = self.tanggal_pinjam.strftime("%Y-%m-%d")
+        return tanggal
 
     def insert(self):
         try:
