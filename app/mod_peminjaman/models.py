@@ -86,3 +86,13 @@ class Peminjaman(Base):
             return True
         except:
             return False
+
+    def delete(peminjaman_id):
+        try:
+            peminjaman = Peminjaman.query.filter_by(id=peminjaman_id).first()
+            peminjaman.is_delete = 1
+            db.session.add(peminjaman)
+            db.session.commit()
+            return True
+        except Exception:
+            return False
