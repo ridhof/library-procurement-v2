@@ -21,7 +21,7 @@ def table():
         return redirect(url_for('auth.login'))
 
     peminjamans = Peminjaman.get_peminjaman()
-    return render_template("peminjaman/table.html", peminjamans=peminjamans, user=user)
+    return render_template("peminjaman/table.html", peminjamans=peminjamans, user=user, is_pustakawan=user.is_pustakawan())
 
 @MOD_PEMINJAMAN.route('baru', methods=['GET', 'POST'])
 def create():
@@ -57,3 +57,11 @@ def create():
             flash(f"Gagal menambahkan data, terjadi kesalahan", flash_code.DANGER)
     form.verified_by.data = user.id
     return render_template("peminjaman/form.html", form=form, page_title="Tambah Peminjaman Baru", peminjaman_code=peminjaman_code)
+
+@MOD_PEMINJAMAN.route('<peminjaman_id>/hapus', methods=['GET'])
+def delete(peminjaman_id):
+    if Peminjaman.delete(peminjaman_id):
+        flash(f"Peminjaman telah berhasil dihapus", flash_code.SUCCESS)
+    else:
+        flash(f"Terjadi kesalahan, gagal menghapus peminjaman", flash_code.DANGER)
+    return redirect(url_for("peminjaman.table"))
