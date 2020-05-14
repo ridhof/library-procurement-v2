@@ -11,8 +11,20 @@ from common import flash_code, peminjaman_code
 
 MOD_PEMINJAMAN = Blueprint('peminjaman', __name__, url_prefix='/peminjaman/')
 
-@MOD_PEMINJAMAN.route('', methods=['GET'])
-def table():
+@MOD_PEMINJAMAN.route('periode/', methods=['GET'])
+def periode():
+    """
+    Return Periode Table Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    periodes = Peminjaman.get_periode()
+    return render_template("peminjaman/periode.html", periodes=periodes)
+
+@MOD_PEMINJAMAN.route('<periode>/', methods=['GET'])
+def table(periode):
     """
     Return Peminjaman Table Page
     """
@@ -20,7 +32,7 @@ def table():
     if user is None:
         return redirect(url_for('auth.login'))
 
-    peminjamans = Peminjaman.get_peminjaman()
+    peminjamans = Peminjaman.get_peminjaman(periode=periode)
     return render_template("peminjaman/table.html", peminjamans=peminjamans, user=user, is_pustakawan=user.is_pustakawan())
 
 @MOD_PEMINJAMAN.route('baru', methods=['GET', 'POST'])
@@ -64,4 +76,4 @@ def delete(peminjaman_id):
         flash(f"Peminjaman telah berhasil dihapus", flash_code.SUCCESS)
     else:
         flash(f"Terjadi kesalahan, gagal menghapus peminjaman", flash_code.DANGER)
-    return redirect(url_for("peminjaman.table"))
+    return redirect(url_for("peminjaman.periode"))
