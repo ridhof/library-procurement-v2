@@ -72,9 +72,26 @@ class Peminjaman(Base):
         if mahasiswa is not None:
             return f"Mahasiswa {mahasiswa.nrp}"
 
-    def get_peminjaman():
-        return Peminjaman.query.filter_by(is_delete=0).all()
+    def get_peminjaman(periode=None):
+        if periode is None:
+            return Peminjaman.query.filter_by(is_delete=0).all()
+        
+        peminjaman_query = Peminjaman.query.filter_by(is_delete=0).all()
+        peminjamans = []
+        for peminjaman in peminjaman_query:
+            if peminjaman.tanggal_pinjam.strftime("%Y-%m") == periode:
+                peminjamans.append(peminjaman)
+        return peminjamans
 
+    def get_periode():
+        peminjamans = Peminjaman.query.filter_by(is_delete=0).all()
+        periodes = []
+        for peminjaman in peminjamans:
+            tanggal = peminjaman.tanggal_pinjam.strftime("%Y-%m")
+            if tanggal not in periodes:
+                periodes.append(tanggal)
+        return periodes
+    
     def get_tanggal(self):
         tanggal = self.tanggal_pinjam.strftime("%Y-%m-%d")
         return tanggal
