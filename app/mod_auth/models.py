@@ -89,6 +89,9 @@ class Staff(Base):
     def get_by_npk(staff_id, npk):
         return Staff.query.filter_by(id=staff_id, npk=npk, is_delete=0).first()
 
+    def get_by_name(nama):
+        return Staff.query.filter_by(nama=nama, is_delete=0).first()
+
     def insert(self):
         try:
             db.session.add(self)
