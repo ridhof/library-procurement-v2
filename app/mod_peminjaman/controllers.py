@@ -77,3 +77,25 @@ def delete(peminjaman_id):
     else:
         flash(f"Terjadi kesalahan, gagal menghapus peminjaman", flash_code.DANGER)
     return redirect(url_for("peminjaman.periode"))
+
+@MOD_PEMINJAMAN.route('store', methods=['POST'])
+def store():
+    """
+    Store Peminjaman
+    """
+    if request.method == 'POST':
+        reg_comp = request.form['reg._comp']
+        judul = request.form['judul_pustaka']
+        anggota = request.form['id_anggota']
+        tanggal_pinjam = request.form['tanggal_pinjam']
+        tanggal_tenggat = request.form['tanggal_tenggat']
+        status = request.form['status']
+        petugas = request.form['petugas']
+        
+        status = status.lower()
+        if status == peminjaman_code.KEMBALI or status == peminjaman_code.PERPANJANG or status == peminjaman_code.PINJAM:
+            if Peminjaman.store_peminjaman(reg_comp, judul, anggota, tanggal_pinjam, tanggal_tenggat, status, petugas):
+                return f"Berhasil menambahkan data ke Background Job"
+        else:
+            return f"Status peminjaman tidak dikenali, gagal menambahkan data"
+    return f"Gagal menambah data"
