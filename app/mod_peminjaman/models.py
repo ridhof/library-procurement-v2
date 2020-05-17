@@ -2,12 +2,14 @@
 Peminjaman Class
 """
 from flask import url_for
+import datetime
 from app import DB as db
 from app.models import Base
 from app.mod_buku.models import Buku
 from app.mod_auth.models import Staff
 from app.mod_mahasiswa.models import Mahasiswa
-from common import flash_code
+from app.mod_unit.models import Unit
+from common import flash_code, perpus_code
 
 
 class Peminjaman(Base):
@@ -63,6 +65,15 @@ class Peminjaman(Base):
             return True
         return False
 
+    def get_pemustaka_object(kode_pemustaka):
+        staff =  Staff.query.filter_by(npk=kode_pemustaka, is_delete=0).first()
+        mahasiswa = Mahasiswa.query.filter_by(nrp=kode_pemustaka, is_delete=0).first()
+        if staff is not None:
+            return staff
+        elif mahasiswa is not None:
+            return mahasiswa
+        return None
+
     def get_pemustaka(self):
         staff = Staff.query.filter_by(id=self.staff_peminjam_id, is_delete=0).first()
         if staff is not None:
@@ -110,6 +121,60 @@ class Peminjaman(Base):
             peminjaman.is_delete = 1
             db.session.add(peminjaman)
             db.session.commit()
+            return True
+        except Exception:
+            return False
+
+    def store_peminjaman(reg_comp, judul, anggota_kode, tanggal_pinjam, tanggal_tenggat, status, petugas_nama):
+        try:
+            buku = Peminjaman.check_buku(reg_comp)
+            if buku is None:
+                buku = Buku(reg_comp, judul)
+                if buku.insert() is False:
+                    return False
+            
+            unit = Unit.query.filter_by(nama='sementara', is_delete=0).first()
+            if unit is None:
+                unit = Unit('99', 'sementara', 'S1', '1', '1')
+                if unit.insert() is False:
+                    return False
+
+            pemustaka = Peminjaman.get_pemustaka_object(anggota_kode)
+            if pemustaka is None:
+                if len(anggota_kode) == 6:
+                    pemustaka = Staff(anggota_kode, 'secret', f'pemustaka {anggota_kode}', unit.id, is_kalab=False, is_kajur=False, perpus_role=perpus_code.ANGGOTA)
+                    if pemustaka.insert() is False:
+                        return False
+                else:
+                    mahasiswa = Mahasiswa(unit_id=unit.id, nrp=anggota_kode, nama='')
+                    if mahasiswa.insert() is False:
+                        return False
+                        
+            pustakawan = Staff.get_by_name(petugas_nama)
+            if pustakawan is None:
+                pustakawan = Staff('', 'secret', petugas_nama, unit.id, False, False, perpus_code.PEGAWAI)
+                if pustakawan.insert() is False:
+                    return False
+            
+            tanggal_pinjam = tanggal_pinjam.split('/')
+            tanggal_pinjam = datetime.datetime(int(tanggal_pinjam[2]), int(tanggal_pinjam[0]), int(tanggal_pinjam[1]))
+            # print(tanggal_pinjam)
+
+            tanggal_tenggat = tanggal_tenggat.split('/')
+            tanggal_tenggat = datetime.datetime(int(tanggal_tenggat[2]), int(tanggal_tenggat[0]), int(tanggal_tenggat[1]))
+            # print(tanggal_tenggat)
+
+            peminjaman = Peminjaman(
+                verified_by=pustakawan.id,
+                buku_regcomp=buku.reg_comp,
+                pemustaka_kode=anggota_kode,
+                tanggal_pinjam=tanggal_pinjam,
+                tanggal_tenggat=tanggal_tenggat,
+                status=status
+            )
+
+            if peminjaman.insert() is False:
+                return False
             return True
         except Exception:
             return False
