@@ -34,6 +34,13 @@ class Buku(Base):
             return Buku.query.filter_by(is_delete=0).all()
         return Buku.query.filter_by(id=buku_id, is_delete=0).first()
 
+    def get_dewey(self, is_preprocessed=False):
+        dewey = Dewey.get_by_kode(self.dewey_classification_kode)
+        result = dewey.nama
+        if is_preprocessed:
+            result = dewey.preprocessed_nama
+        return result
+
     def insert(self):
         try:
             db.session.add(self)
@@ -123,6 +130,9 @@ class Dewey(Base):
             deweys_id.append(dewey.id)
         
         return deweys_text, deweys_id
+
+    def get_by_kode(kode):
+        return Dewey.query.filter_by(kode=kode, is_delete=0).first()
 
     def kode_available(self):
         return Dewey.query.filter_by(kode=self.kode, is_delete=0).first()
