@@ -3,6 +3,7 @@ Peminjaman Class
 """
 from flask import url_for
 import datetime
+from datetime import timedelta
 from app import DB as db
 from app.models import Base
 from app.mod_buku.models import Buku
@@ -45,9 +46,13 @@ class Peminjaman(Base):
     def check_buku(reg_comp):
         return Buku.regcomp_available(reg_comp)
 
-    def get_buku(self):
+    def get_buku(self, is_preprocessed=False):
         buku = Buku.query.filter_by(id=self.buku_id, is_delete=0).first()
-        return buku.judul
+        result = buku.judul
+        if is_preprocessed:
+            preprocessed_dewey = buku.get_dewey(is_preprocessed=True)
+            result = f"{preprocessed_dewey} {buku.preprocessed_judul}"
+        return result
 
     def set_pemustaka(self, kode_pemustaka):
         staff = Staff.query.filter_by(npk=kode_pemustaka, is_delete=0).first()
@@ -83,6 +88,17 @@ class Peminjaman(Base):
         if mahasiswa is not None:
             return f"Mahasiswa {mahasiswa.nrp}"
 
+    def get_latest_month_peminjaman():
+        today = datetime.datetime.today()
+        month = today.month - 1
+        year = today.year
+        if month < 1:
+            month = 12
+            year = year - 1
+        prev_month = datetime.datetime(year, month, today.day)
+        peminjamans = Peminjaman.query.filter(Peminjaman.tanggal_pinjam >= prev_month).all()
+        return peminjamans
+    
     def get_peminjaman(periode=None):
         if periode is None:
             return Peminjaman.query.filter_by(is_delete=0).all()
@@ -159,10 +175,12 @@ class Peminjaman(Base):
             tanggal_pinjam = tanggal_pinjam.split('/')
             tanggal_pinjam = datetime.datetime(int(tanggal_pinjam[2]), int(tanggal_pinjam[0]), int(tanggal_pinjam[1]))
             # print(tanggal_pinjam)
+            # tanggal_pinjam = datetime.datetime.today()
 
             tanggal_tenggat = tanggal_tenggat.split('/')
             tanggal_tenggat = datetime.datetime(int(tanggal_tenggat[2]), int(tanggal_tenggat[0]), int(tanggal_tenggat[1]))
             # print(tanggal_tenggat)
+            # tanggal_tenggat = datetime.datetime.today()
 
             peminjaman = Peminjaman(
                 verified_by=pustakawan.id,
