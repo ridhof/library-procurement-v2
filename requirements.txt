@@ -7,7 +7,9 @@ Flask-SQLAlchemy
 Flask-WTF
 gunicorn
 inflect
+mlxtend
 nltk
+pandas
 pylint
 PyMySQL
 python-dotenv
