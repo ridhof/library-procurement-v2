@@ -24,7 +24,10 @@ def table():
     prev_month = datetime(year, month, today.day)
 
     if request.method == 'GET':
-        peminjamans = Peminjaman.get_latest_month_peminjaman()
+        bulan = prev_month.month
+        if len(f"{bulan}") == 1:
+            bulan = f"0{bulan}"
+        peminjamans = Peminjaman.get_peminjaman(periode=f"{prev_month.year}-{bulan}")
         clustering = Clustering(prev_month.month, prev_month.year)
         print(clustering.cluster(peminjamans))
     else:
