@@ -93,6 +93,18 @@ class PeminjamanClustering(Base):
     def __repr__(self):
         return '<PeminjamanClustering %r>' % (self.id)
 
+    def get_id(buku_id, clustering_id):
+        try:
+            peminjaman_clusterings = PeminjamanClustering.query.filter_by(buku_id=buku_id, is_delete=0).all()
+            peminjaman_clustering_id = None
+            for peminjaman_clustering in peminjaman_clusterings:
+                clustering_detail = ClusteringDetail.query.filter_by(id=peminjaman_clustering.clustering_detail_id, is_delete=0).first()
+                if clustering_detail.clustering_id == int(clustering_id):
+                    peminjaman_clustering_id = peminjaman_clustering.id
+            return peminjaman_clustering_id
+        except Exception:
+            return None
+    
     def insert(self):
         try:
             db.session.add(self)
