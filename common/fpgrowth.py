@@ -1,3 +1,4 @@
+import math
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import fpgrowth
 import pandas as pd
@@ -20,9 +21,21 @@ class FPGrowth():
         self.calculate_lift()
         self.set_association_rules()
 
+    def calculate_min_sup(transaction_length):
+        a = -0.4
+        b = -0.2
+        c = 0.2
+        x = transaction_length
+
+        ax = a * x
+        axb = ax + b
+        axbc = axb + c
+        return math.exp(axbc)
+
     def calculate_support(self):
+        min_support = FPGrowth.calculate_min_sup(len(self.transactions))
         fp_growth = fpgrowth(self.transactions_df,
-                             min_support=0.6, use_colnames=True)
+                             min_support=min_support, use_colnames=True)
         for row in fp_growth.values.tolist():
             support = row[0]
             row_itemsets = row[1]
