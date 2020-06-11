@@ -49,6 +49,9 @@ class Clustering(Base):
     def find(clustering_id):
         return Clustering.query.filter_by(id=clustering_id, is_delete=0).first()
 
+    def find_id(bulan, tahun):
+        clustering = Clustering.query.filter_by(bulan=bulan, tahun=tahun, is_delete=0).first()
+        return clustering.id
 
 class ClusteringDetail(Base):
 
@@ -67,9 +70,12 @@ class ClusteringDetail(Base):
     def __repr__(self):
         return '<ClusteringDetail %r>' % (self.id)
 
-    def find(cluster_label):
-        return ClusteringDetail.query.filter_by(cluster_label=cluster_label, is_delete=0).first()
+    def find(cluster_label, clustering_id):
+        return ClusteringDetail.query.filter_by(cluster_label=cluster_label, clustering_id=clustering_id, is_delete=0).first()
     
+    def get_details(clustering_id):
+        return ClusteringDetail.query.filter_by(clustering_id=clustering_id, is_delete=0).all()
+
     def insert(self):
         try:
             db.session.add(self)
@@ -105,6 +111,9 @@ class PeminjamanClustering(Base):
         except Exception:
             return None
     
+    def get_by_detail(clustering_detail_id):
+        return PeminjamanClustering.query.filter_by(clustering_detail_id=clustering_detail_id, is_delete=0).all()
+
     def insert(self):
         try:
             db.session.add(self)
