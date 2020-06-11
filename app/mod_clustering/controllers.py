@@ -44,7 +44,7 @@ def table():
                 else:
                     print(f"Gagal {clustering_id} - {cluster_label} - {cluster_dict}")
             else:
-                clustering_detail = ClusteringDetail.find(cluster_label=cluster_label)
+                clustering_detail = ClusteringDetail.find(cluster_label=cluster_label, clustering_id=clustering_id)
                 if clustering_detail is not None:
                     buku_id = request.form['buku_id']
                     peminjaman_clustering = PeminjamanClustering(buku_id, clustering_detail.id)
