@@ -65,6 +65,7 @@ def create_app(config):
     from app.mod_buku.controllers import MOD_BUKU as buku_module
     from app.mod_peminjaman.controllers import MOD_PEMINJAMAN as peminjaman_module
     from app.mod_clustering.controllers import MOD_CLUSTERING as clustering_module
+    from app.mod_fpgrowth.controllers import MOD_FPGROWTH as fpgrowth_module
 
     # Register blueprints
     APP.register_blueprint(landing_page_module)
@@ -80,6 +81,7 @@ def create_app(config):
     APP.register_blueprint(buku_module)
     APP.register_blueprint(peminjaman_module)
     APP.register_blueprint(clustering_module)
+    APP.register_blueprint(fpgrowth_module)
 
     # Build the database:
     # This will create the database file using SQLAlchemy
