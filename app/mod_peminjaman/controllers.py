@@ -33,7 +33,7 @@ def table(periode):
         return redirect(url_for('auth.login'))
 
     peminjamans = Peminjaman.get_peminjaman(periode=periode)
-    return render_template("peminjaman/table.html", peminjamans=peminjamans, user=user, is_pustakawan=user.is_pustakawan())
+    return render_template("peminjaman/table.html", peminjamans=peminjamans, user=user, is_pustakawan=user.is_pustakawan(), periode=periode)
 
 @MOD_PEMINJAMAN.route('baru', methods=['GET', 'POST'])
 def create():
