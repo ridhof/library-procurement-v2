@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Tabel Asosiasi{% endblock %}
+
+{% block style_libs %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content_title %}Asosiasi{% endblock %}
+
+{% block button_insert %}
+<div>
+  <a href="{{ url_for('peminjaman.table', periode=periode) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Data Peminjaman
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Tabel Asosiasi</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Cluster Buku Utama</th>
+            <th>Cluster Buku Terkait</th>
+            <th>Confidence Value</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>Cluster Buku Utama</th>
+            <th>Cluster Buku Terkait</th>
+            <th>Confidence Value</th>
+          </tr>
+        </tfoot>
+        <tbody>
+          {% for fpgrowth in fpgrowths %}  
+          <tr>
+            <td>{{ fpgrowth.get_cluster_dict(fpgrowth.main_itemset) }}</td>
+            <td>{{ fpgrowth.get_cluster_dict(fpgrowth.correlated_itemset) }}</td>
+            <td>{{ fpgrowth.confidence_value }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- /.container-fluid -->
+{% endblock %}
+
+{% block scripts_libs %}
+<!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{{ url_for('static', filename='js/demo/datatables/order-by-hiddens.js') }}"></script>
+{% endblock %}
