@@ -70,6 +70,9 @@ class ClusteringDetail(Base):
     def __repr__(self):
         return '<ClusteringDetail %r>' % (self.id)
 
+    def find_by_id(clustering_detail_id):
+        return ClusteringDetail.query.filter_by(id=clustering_detail_id, is_delete=0).first()
+
     def find(cluster_label, clustering_id):
         return ClusteringDetail.query.filter_by(cluster_label=cluster_label, clustering_id=clustering_id, is_delete=0).first()
     
@@ -98,6 +101,9 @@ class PeminjamanClustering(Base):
 
     def __repr__(self):
         return '<PeminjamanClustering %r>' % (self.id)
+
+    def find(id):
+        return PeminjamanClustering.query.filter_by(id=id, is_delete=0).first()
 
     def get_id(buku_id, clustering_id):
         try:
