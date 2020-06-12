@@ -53,9 +53,18 @@ class FrequentPatternGrowth(Base):
                         fpgrowths.extend(fpgrowth)
                     return fpgrowths
 
-            return False
+            return []
         except:
-            return False
+            return []
+
+    def get_cluster_dict(self, peminjaman_clustering_id):
+        result = peminjaman_clustering_id
+        peminjaman_clustering = PeminjamanClustering.find(peminjaman_clustering_id)
+        if peminjaman_clustering is not None:
+            clustering_detail = ClusteringDetail.find_by_id(peminjaman_clustering.clustering_detail_id)
+            if clustering_detail is not None:
+                result = clustering_detail.cluster_dict
+        return result
 
     def insert(self):
         try:
