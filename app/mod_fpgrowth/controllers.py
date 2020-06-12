@@ -46,8 +46,7 @@ def table():
 
             periode = request.args.get('periode')
             fpgrowths = FrequentPatternGrowth.get(periode=periode)
-            print(fpgrowths)
-            return f"heyo"
+            return render_template("fpgrowth/table.html", fpgrowths=fpgrowths, periode=periode)
     else:
         main_itemset = request.form['main_itemset']
         correlated_itemset = request.form['correlated_itemset']
