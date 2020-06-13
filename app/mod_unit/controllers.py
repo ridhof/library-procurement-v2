@@ -74,33 +74,46 @@ def update(unit_id, unit_kode):
     if form.validate_on_submit():
         new_kode = f"{form.kode_fakultas.data}{form.kode_jurusan.data}"
 
-        if Unit.query.filter_by(kode=new_kode, is_delete=0).first() is None:
-            unit_update = Unit.update(
-                unit_id=form.unit_id.data, 
-                kode_unit=new_kode,
-                nama=form.nama_unit.data,
-                gedung=form.gedung.data,
-                lantai=form.lantai.data,
-                ruangan=form.ruangan.data
-            )
-            if unit_update:
-                flash(f"Unit dengan kode { unit_kode } telah berhasil diubah", flash_code.SUCCESS)
-                return redirect(url_for("unit.update", unit_id=unit_id, unit_kode=new_kode))
-        else:
-            flash(f"Unit dengan kode { new_kode } sudah digunakan", flash_code.WARNING)
+        if unit_kode != new_kode:
+            if Unit.query.filter_by(kode=new_kode, is_delete=0).first() is not None:
+                flash(f"Unit dengan kode { new_kode } sudah digunakan", flash_code.WARNING)
+                form = UnitForm(
+                    data={
+                        'unit_id': form.unit_id.data,
+                        'kode_fakultas': form.kode_fakultas.data,
+                        'kode_jurusan': form.kode_jurusan.data,
+                        'nama_unit': form.nama_unit.data,
+                        'gedung': form.gedung.data,
+                        'lantai': form.lantai.data,
+                        'ruangan': form.ruangan.data
+                    }
+                )
+                return render_template("unit/form.html", form=form, page_title="Ubah Unit", user_role=user.perpus_role)
         
-        flash(f"Terjadi kesalahan sehingga data gagal diubah", flash_code.DANGER)
-        form = UnitForm(
-            data={
-                'unit_id': form.unit_id.data,
-                'kode_fakultas': form.kode_fakultas.data,
-                'kode_jurusan': form.kode_jurusan.data,
-                'nama_unit': form.nama_unit.data,
-                'gedung': form.gedung.data,
-                'lantai': form.lantai.data,
-                'ruangan': form.ruangan.data
-            }
+        unit_update = Unit.update(
+            unit_id=form.unit_id.data, 
+            kode_unit=new_kode,
+            nama=form.nama_unit.data,
+            gedung=form.gedung.data,
+            lantai=form.lantai.data,
+            ruangan=form.ruangan.data
         )
+        if unit_update:
+            flash(f"Unit dengan kode { unit_kode } telah berhasil diubah", flash_code.SUCCESS)
+            return redirect(url_for("unit.update", unit_id=unit_id, unit_kode=new_kode))
+        else:
+            flash(f"Terjadi kesalahan sehingga data gagal diubah", flash_code.DANGER)
+            form = UnitForm(
+                data={
+                    'unit_id': form.unit_id.data,
+                    'kode_fakultas': form.kode_fakultas.data,
+                    'kode_jurusan': form.kode_jurusan.data,
+                    'nama_unit': form.nama_unit.data,
+                    'gedung': form.gedung.data,
+                    'lantai': form.lantai.data,
+                    'ruangan': form.ruangan.data
+                }
+            )
     else:
         form = UnitForm(
             data={
