@@ -9,9 +9,11 @@
 {% block content_title %}Buku{% endblock %}
 
 {% block button_insert %}
+{% if user.is_pustakawan() %}
 <a href="{{ url_for('buku.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
   <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Data Baru
 </a>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -27,14 +29,18 @@
           <tr>
             <th>REG.COMP</th>
             <th>Judul</th>
+            {% if user.is_pustakawan() %}
             <th>Aksi</th>
+            {% endif %}
           </tr>
         </thead>
         <tfoot>
           <tr>
             <th>REG.COMP</th>
             <th>Judul</th>
+            {% if user.is_pustakawan() %}
             <th>Aksi</th>
+            {% endif %}
           </tr>
         </tfoot>
         <tbody>
@@ -42,9 +48,11 @@
           <tr>
             <td>{{ buku.reg_comp }}</td>
             <td>{{ buku.judul }}</td>
+            {% if user.is_pustakawan() %}
             <td>
               <a class="btn btn-primary btn-user btn-block" href="{{ url_for('buku.update', buku_id=buku.id) }}">Update</a>
             </td>
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>
