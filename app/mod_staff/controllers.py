@@ -26,8 +26,10 @@ def table():
         user_role = 'kalab'
 
     staffs = Staff.get_by_unit(user.unit_id)
-    if user.is_superadmin:
+    if user.is_superadmin():
         staffs = Staff.get_all()
+    elif user.is_pustakawan():
+        staffs = Staff.get_pustakawans()
     return render_template("staff/table.html", staffs=staffs, user_role=user_role, user=user)
 
 @MOD_STAFF.route('/baru', methods=['GET', 'POST'])
@@ -117,9 +119,9 @@ def update(staff_id):
                     user=user
                 )
 
-        unit_id = None
-        perpus_role = None
-        if user.is_pustakawan() or user.is_superadmin():
+        unit_id = staff.unit_id
+        perpus_role = staff.perpus_role
+        if user.perpus_role == perpus_code.DIREKTUR or user.is_superadmin():
             perpus_role = form.perpus_role.data
         if user.is_superadmin():
             unit_id = form.unit_id.data

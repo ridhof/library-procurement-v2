@@ -76,7 +76,7 @@
               </div>
               {% endif %}
 
-              {% if user.is_superadmin() %}
+              {% if user.is_superadmin() or user.perpus_role == 'direktur' %}
               <div class="form-group">
                 <label for="perpus_role">Perpus Role:</label>
                 {{ render_field(form.perpus_role, size=4) }}

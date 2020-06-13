@@ -46,7 +46,7 @@
               <td>{{ staff.get_npk() }}</td>
               <td>{{ staff.nama }}</td>
               <td align="right">
-                  {% if user_role == 'kajur' or user_role == 'kalab' or user.id == staff.id or user.perpus_role == 'dev' %}
+                  {% if user_role == 'kajur' or user_role == 'kalab' or user.id == staff.id or user.perpus_role == 'dev' or user.perpus_role == 'kabag' or user.perpus_role == 'direktur' %}
                     {% if user_role == 'kalab' and staff.is_kajur %}
                     {% else %}
                     <button class="btn btn-primary btn-user dropdown-toggle btn-block" data-toggle="dropdown">Aksi</button>

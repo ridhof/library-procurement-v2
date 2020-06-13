@@ -88,6 +88,13 @@ class Staff(Base):
     def get_all():
         return Staff.query.filter_by(is_delete=0).all()
 
+    def get_pustakawans():
+        pustakawans = []
+        pustakawans.extend(Staff.query.filter_by(perpus_role=perpus_code.PEGAWAI, is_delete=0).all())
+        pustakawans.extend(Staff.query.filter_by(perpus_role=perpus_code.KEPALA_BAGIAN, is_delete=0).all())
+        pustakawans.extend(Staff.query.filter_by(perpus_role=perpus_code.DIREKTUR, is_delete=0).all())
+        return pustakawans
+
     def find(id):
         return Staff.query.filter_by(id=id, is_delete=0).first()
 
@@ -149,7 +156,7 @@ class Staff(Base):
             if unit_id is not None:
                 staff.unit_id = unit_id
             if perpus_role is not None:
-                staff.perpus_role = perpus_role    
+                staff.perpus_role = perpus_role 
             db.session.add(staff)
             db.session.commit()
             return True
