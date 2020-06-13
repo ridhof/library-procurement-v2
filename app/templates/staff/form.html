@@ -52,6 +52,13 @@
               {{ form.csrf_token }}
               {{ render_field(form.staff_id) }}
 
+              {% if user.is_superadmin() %}
+              <div class="form-group">
+                <label for="unit_id">Unit ID:</label>
+                {{ render_field(form.unit_id, class="form-control form-control-user", placeholder="", type="text") }}
+              </div>
+              {% endif %}
+              
               <div class="form-group">
                 <label for="npk">NPK:</label>
                 {{ render_field(form.npk, class="form-control form-control-user", placeholder="", type="text") }}
@@ -62,10 +69,17 @@
                   {{ render_field(form.nama, class="form-control form-control-user", placeholder="", type="text") }}
               </div>
 
-              {% if user.is_kajur %}
+              {% if user.is_kajur or user.is_superadmin() %}
               <div class="form-group">
                 <label for="role">Role:</label>
                 {{ render_field(form.role, size=3) }}
+              </div>
+              {% endif %}
+
+              {% if user.is_superadmin() %}
+              <div class="form-group">
+                <label for="perpus_role">Perpus Role:</label>
+                {{ render_field(form.perpus_role, size=4) }}
               </div>
               {% endif %}
 
@@ -74,8 +88,8 @@
               </button>
 
               {% if page_title == 'Ubah Staff' %}
-                {% if user.is_kajur %}
-                <a href='{{ url_for("staff.delete", staff_id=form.staff_id.data, staff_npk=form.npk.data) }}' 
+                {% if user.is_kajur or user.is_superadmin() %}
+                <a href='{{ url_for("staff.delete", staff_id=form.staff_id.data) }}' 
                   class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
                     Hapus
                 </a>
