@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import DB as db
 from app.models import Base
 from app.mod_unit.models import Unit
-from common import code, flash_code, perpus_code
+from common import code, flash_code, perpus_code, config
 
 
 class Staff(Base):
@@ -55,7 +55,7 @@ class Staff(Base):
             flash("Silahkan login terlebih dahulu", flash_code.WARNING)
         else:
             user_id = session.get('user_id')
-            user = Staff.query.filter_by(id=user_id).first()
+            user = Staff.query.filter_by(id=user_id, is_delete=0).first()
         return user
 
     def is_pustakawan(self):
@@ -69,6 +69,11 @@ class Staff(Base):
             return False
         return True
 
+    def is_superadmin(self):
+        if self.npk == config.SUPERADMIN_USERNAME:
+            return True
+        return False
+
     def get_unit_role(self):
         role = 'staff'
         if self.is_kajur:
@@ -78,10 +83,13 @@ class Staff(Base):
         return role
 
     def get_unit(self):
-        return Unit.query.filter_by(kode=self.unit_id).first()
+        return Unit.query.filter_by(kode=self.unit_id, is_delete=0).first()
 
     def get_all():
         return Staff.query.filter_by(is_delete=0).all()
+
+    def find(id):
+        return Staff.query.filter_by(id=id, is_delete=0).first()
 
     def get_by_unit(unit_id):
         return Staff.query.filter_by(unit_id=unit_id, is_delete=0).all()
@@ -92,6 +100,29 @@ class Staff(Base):
     def get_by_name(nama):
         return Staff.query.filter_by(nama=nama, is_delete=0).first()
 
+    def get_npk(self):
+        npk = self.npk
+        if npk == '':
+            npk = 'NPK belum didaftarkan'
+        return npk
+
+    def get_form_data(self, is_superadmin=False, is_pustakawan=False):
+        form_data = {
+            'staff_id': self.id,
+            'npk': self.npk,
+            'nama': self.nama,
+            'role': self.get_unit_role()
+        }
+
+        if is_superadmin:
+            form_data['perpus_role'] = self.perpus_role
+            form_data['unit_id'] = self.unit_id
+
+        if is_pustakawan:
+            form_data['perpus_role'] = self.perpus_role
+        
+        return form_data
+
     def insert(self):
         try:
             db.session.add(self)
@@ -100,7 +131,7 @@ class Staff(Base):
         except:
             return False
 
-    def update(staff_id, npk=None, nama=None, role=None):
+    def update(staff_id, npk=None, nama=None, role=None, unit_id=None, perpus_role=None):
         try:
             staff = Staff.query.filter_by(id=staff_id, is_delete=0).first()
 
@@ -115,6 +146,10 @@ class Staff(Base):
                     staff.is_kajur = 1
                 elif role == 'kalab':
                     staff.is_kalab = 1
+            if unit_id is not None:
+                staff.unit_id = unit_id
+            if perpus_role is not None:
+                staff.perpus_role = perpus_role    
             db.session.add(staff)
             db.session.commit()
             return True
