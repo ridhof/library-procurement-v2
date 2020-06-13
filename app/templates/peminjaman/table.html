@@ -10,8 +10,8 @@
 
 {% block button_insert %}
 <div>
-  {% if not is_pustakawan %}
-  <a href="{{ url_for('peminjaman.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+  {% if is_pustakawan %}
+  <a href="{{ url_for('peminjaman.create', periode=periode) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Data Baru
   </a>
   {% endif %}
@@ -36,7 +36,7 @@
             <th>Pemustaka</th>
             <th>Buku</th>
             <th>Status</th>
-            {% if not is_pustakawan %}
+            {% if is_pustakawan %}
             <th>Aksi</th>
             {% endif %}
           </tr>
@@ -47,7 +47,7 @@
             <th>Pemustaka</th>
             <th>Buku</th>
             <th>Status</th>
-            {% if not is_pustakawan %}
+            {% if is_pustakawan %}
             <th>Aksi</th>
             {% endif %}
           </tr>
@@ -59,9 +59,9 @@
             <td>{{ peminjaman.get_pemustaka() }}</td>
             <td>{{ peminjaman.get_buku() }}</td>
             <td>{{ peminjaman.status.capitalize() }}</td>
-            {% if not is_pustakawan %}
+            {% if is_pustakawan %}
             <td>
-              <a class="btn btn-danger btn-user btn-block" href="{{ url_for('peminjaman.delete', peminjaman_id=peminjaman.id) }}">Hapus</a>
+              <a class="btn btn-danger btn-user btn-block" href="{{ url_for('peminjaman.delete', periode=periode, peminjaman_id=peminjaman.id) }}">Hapus</a>
             </td>
             {% endif %}
           </tr>

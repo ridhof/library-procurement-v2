@@ -35,8 +35,8 @@ def table(periode):
     peminjamans = Peminjaman.get_peminjaman(periode=periode)
     return render_template("peminjaman/table.html", peminjamans=peminjamans, user=user, is_pustakawan=user.is_pustakawan(), periode=periode)
 
-@MOD_PEMINJAMAN.route('baru', methods=['GET', 'POST'])
-def create():
+@MOD_PEMINJAMAN.route('<periode>/baru', methods=['GET', 'POST'])
+def create(periode):
     """
     Return Create Page
     """
@@ -64,19 +64,19 @@ def create():
         )
         if peminjam.insert():
             flash(f"Peminjaman berhasil ditambahkan", flash_code.SUCCESS)
-            return redirect(url_for('peminjaman.create'))
+            return redirect(url_for('peminjaman.create', periode=periode))
         else:
             flash(f"Gagal menambahkan data, terjadi kesalahan", flash_code.DANGER)
     form.verified_by.data = user.id
-    return render_template("peminjaman/form.html", form=form, page_title="Tambah Peminjaman Baru", peminjaman_code=peminjaman_code)
+    return render_template("peminjaman/form.html", form=form, page_title="Tambah Peminjaman Baru", peminjaman_code=peminjaman_code, periode=periode)
 
-@MOD_PEMINJAMAN.route('<peminjaman_id>/hapus', methods=['GET'])
-def delete(peminjaman_id):
+@MOD_PEMINJAMAN.route('<periode>/<peminjaman_id>/hapus', methods=['GET'])
+def delete(periode, peminjaman_id):
     if Peminjaman.delete(peminjaman_id):
         flash(f"Peminjaman telah berhasil dihapus", flash_code.SUCCESS)
     else:
         flash(f"Terjadi kesalahan, gagal menghapus peminjaman", flash_code.DANGER)
-    return redirect(url_for("peminjaman.periode"))
+    return redirect(url_for("peminjaman.table", periode=periode))
 
 @MOD_PEMINJAMAN.route('store', methods=['POST'])
 def store():

@@ -5,7 +5,7 @@
 {% block content_title %}{{ page_title }}{% endblock %}
 
 {% block button_insert %}
-<a href="{{ url_for('peminjaman.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+<a href="{{ url_for('peminjaman.table', periode=periode) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
     &larr; Kembali ke Tabel Peminjaman
 </a>
 {% endblock %}
