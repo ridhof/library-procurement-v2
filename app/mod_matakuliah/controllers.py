@@ -130,7 +130,7 @@ def update(matakuliah_id, matakuliah_kode):
                 'kurikulum': matakuliah.get_kurikulum().split(' ')[1].lower()
             }
         )
-    return render_template("matakuliah/form.html", form=form, page_title="Ubah Matakuliah")
+    return render_template("matakuliah/form.html", form=form, page_title="Ubah Matakuliah", user=user)
 
 @MOD_MATAKULIAH.route('/<matakuliah_id>/<matakuliah_kode>/hapus', methods=['GET'])
 def delete(matakuliah_id, matakuliah_kode):

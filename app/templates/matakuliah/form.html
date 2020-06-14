@@ -92,7 +92,7 @@
                   Simpan
               </button>
 
-              {% if page_title == 'Ubah Matakuliah' %}
+              {% if page_title == 'Ubah Matakuliah' and (user.is_kajur == 1 or user.is_kalab == 1) %}
               <a href='{{ url_for("matakuliah.delete", matakuliah_id=form.matakuliah_id.data, matakuliah_kode=form.kode.data) }}' 
                 class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
                   Hapus
