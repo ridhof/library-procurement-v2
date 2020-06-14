@@ -6,6 +6,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from app.mod_auth.models import Staff
 from app.mod_mahasiswa.models import Mahasiswa
 from app.mod_mahasiswa.forms import MahasiswaForm
+from app.mod_unit.models import Unit
 
 from common import flash_code
 
@@ -22,6 +23,8 @@ def table():
         return redirect(url_for('auth.login'))
 
     mahasiswas = Mahasiswa.get_by_unit(user.unit_id)
+    if user.is_pustakawan():
+        mahasiswas = Mahasiswa.get_all()
     return render_template("mahasiswa/table.html", mahasiswas=mahasiswas, user=user)
 
 @MOD_MAHASISWA.route('baru', methods=['GET', 'POST'])
@@ -41,6 +44,15 @@ def create():
             nama=form.nama.data
         )
 
+        if user.is_pustakawan():
+            unit_kode = form.unit_kode.data
+            unit = Unit.get(unit_kode)
+            if unit is not None:
+                mahasiswa.unit_id = unit.id
+            else:
+                flash(f"Gagal menambahkan data, Unit dengan Kode {unit_kode} tidak dapat ditemukan", flash_code.DANGER)
+                return render_template("mahasiswa/form.html", form=form, page_title="Tambah Mahasiswa Baru", user=user)
+
         if Mahasiswa.nrp_available(mahasiswa.nrp) is not None:
             flash(f"Gagal menambahkan data, NRP sudah digunakan", flash_code.DANGER)
         else:
@@ -50,7 +62,7 @@ def create():
             else:
                 flash(f"Gagal menambahkan data, terjadi kesalahan", flash_code.DANGER)
                 
-    return render_template("mahasiswa/form.html", form=form, page_title="Tambah Mahasiswa Baru")
+    return render_template("mahasiswa/form.html", form=form, page_title="Tambah Mahasiswa Baru", user=user)
 
 @MOD_MAHASISWA.route('<mahasiswa_id>/<mahasiswa_nrp>/ubah', methods=['GET', 'POST'])
 def update(mahasiswa_id, mahasiswa_nrp):
@@ -73,19 +85,25 @@ def update(mahasiswa_id, mahasiswa_nrp):
                 flash(f"NRP telah digunakan, gagal mengubah data", flash_code.WARNING)
                 return render_template("mahasiswa/form.html", form=form, page_title="Ubah Mahasiswa")
         
-        if Mahasiswa.update(form.mahasiswa_id.data, form.nrp.data, form.nama.data):
+        unit_id = mahasiswa.unit_id
+        unit = Unit.get(kode=form.unit_kode.data)
+        if unit is not None:
+            unit_id = unit.id
+
+        if Mahasiswa.update(form.mahasiswa_id.data, form.nrp.data, form.nama.data, unit_id):
             flash(f"Mahasiswa berhasil diubah", flash_code.SUCCESS)
             return redirect(url_for('mahasiswa.update', mahasiswa_id=mahasiswa_id, mahasiswa_nrp=form.nrp.data))
         else:
             flash(f"Terjadi kesalahan, data gagal disimpan", flash_code.DANGER)
     else:
+        unit = Unit.get(unit_id=mahasiswa.unit_id)
         form = MahasiswaForm(data={
             'mahasiswa_id': mahasiswa.id,
-            'unit_id': mahasiswa.unit_id,
+            'unit_kode': unit.kode,
             'nrp': mahasiswa.nrp,
             'nama': mahasiswa.nama
         })
-    return render_template("mahasiswa/form.html", form=form, page_title="Ubah Mahasiswa")
+    return render_template("mahasiswa/form.html", form=form, page_title="Ubah Mahasiswa", user=user)
 
 @MOD_MAHASISWA.route('<mahasiswa_id>/<mahasiswa_nrp>/hapus', methods=['GET'])
 def delete(mahasiswa_id, mahasiswa_nrp):

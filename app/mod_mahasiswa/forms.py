@@ -13,3 +13,4 @@ class MahasiswaForm(FlaskForm):
     mahasiswa_id = HiddenField("IdMahasiswa")
     nrp = TextField("NRP", [Required()])
     nama = TextField("Nama", [Required()])
+    unit_kode = TextField("UnitKode")

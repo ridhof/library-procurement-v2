@@ -52,6 +52,13 @@
               {{ form.csrf_token }}
               {{ render_field(form.mahasiswa_id) }}
 
+              {% if user.is_pustakawan() %}
+              <div class="form-group">
+                <label for="unit_kode">Unit Kode:</label>
+                {{ render_field(form.unit_kode, class="form-control form-control-user", placeholder="", type="text", maxlength="10") }}
+              </div>
+              {% endif %}
+
               <div class="form-group">
                 <label for="nrp">NRP:</label>
                 {{ render_field(form.nrp, class="form-control form-control-user", placeholder="", type="text", maxlength="10") }}
