@@ -32,6 +32,14 @@ class Unit(Base):
     def get_by_kode(unit_id, kode):
         return Unit.query.filter_by(id=unit_id, kode=kode, is_delete=0).first()
 
+    def get(kode=None, unit_id=None):
+        if kode is not None:
+            return Unit.query.filter_by(kode=kode, is_delete=0).first()
+        elif unit_id is not None:
+            return Unit.query.filter_by(id=unit_id, is_delete=0).first()
+        else:
+            return None
+
     def insert(self):
         try:
             db.session.add(self)
