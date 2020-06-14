@@ -26,6 +26,9 @@ class Mahasiswa(Base):
     def __repr__(self):
         return '<Mahasiswa %r>' % (self.nrp)
 
+    def get_all():
+        return Mahasiswa.query.filter_by(is_delete=0).all()
+
     def get_by_unit(unit_id):
         return Mahasiswa.query.filter_by(unit_id=unit_id, is_delete=0).all()
 
@@ -35,6 +38,12 @@ class Mahasiswa(Base):
     def nrp_available(nrp):
         return Mahasiswa.query.filter_by(nrp=nrp, is_delete=0).first()
 
+    def get_nama(self):
+        nama = self.nama
+        if nama == '' or nama is None:
+            nama = 'Nama belum didaftarkan'
+        return nama
+
     def insert(self):
         try:
             db.session.add(self)
@@ -43,11 +52,12 @@ class Mahasiswa(Base):
         except:
             return False
 
-    def update(mahasiswa_id, nrp, nama):
+    def update(mahasiswa_id, nrp, nama, unit_id):
         try:
             mahasiswa = Mahasiswa.query.filter_by(id=mahasiswa_id, is_delete=0).first()
             mahasiswa.nrp = nrp
             mahasiswa.nama = nama
+            mahasiswa.unit_id = unit_id
             db.session.add(mahasiswa)
             db.session.commit()
             return True
