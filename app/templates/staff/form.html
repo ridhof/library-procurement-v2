@@ -88,11 +88,13 @@
               </button>
 
               {% if page_title == 'Ubah Staff' %}
-                {% if user.is_kajur or user.is_superadmin() %}
-                <a href='{{ url_for("staff.delete", staff_id=form.staff_id.data) }}' 
-                  class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
-                    Hapus
-                </a>
+                {% if user.is_kajur or user.is_kalab or user.is_superadmin() %}
+                  {% if form.staff_id.data != user.id %}
+                  <a href='{{ url_for("staff.delete", staff_id=form.staff_id.data) }}' 
+                    class="btn btn-danger btn-user btn-block text-uppercase font-weight-bold">
+                      Hapus
+                  </a>
+                  {% endif %}
                 {% endif %}
               {% endif %}
           </form>
