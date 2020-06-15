@@ -41,7 +41,7 @@ def create():
     if user is None:
         return redirect(url_for('auth.login'))
 
-    if not (user.is_kajur or user.is_kalab or user.perpus_role == 'dev'):
+    if not (user.is_kajur or user.is_kalab or user.perpus_role == 'dev' or user.perpus_role == perpus_code.DIREKTUR):
         flash("Akun anda tidak dapat mengakses atau melakukan hal tersebut", flash_code.WARNING)
         return redirect(url_for('staff.table'))
 
@@ -65,11 +65,14 @@ def create():
             staff.perpus_role = form.perpus_role.data
             staff.unit_id = form.unit_id.data
         elif user.is_pustakawan():
-            staff.perpus_role = form.perpus_role.data
+            perpus_role = form.perpus_role.data
+            if perpus_role is None or perpus_role == '' or perpus_role == perpus_code.ANGGOTA:
+                perpus_role = perpus_code.PEGAWAI
+            staff.perpus_role = perpus_role
 
-        if form.role.data == 'kajur':
+        if form.role.data == 'kajur' or staff.perpus_role == perpus_code.DIREKTUR:
             staff.is_kajur = 1
-        elif form.role.data == 'kalab':
+        elif form.role.data == 'kalab' or staff.perpus_role == perpus_code.KEPALA_BAGIAN:
             staff.is_kalab = 1
 
         if Staff.query.filter_by(npk=staff.npk, is_delete=0).first() is not None:
@@ -125,12 +128,16 @@ def update(staff_id):
             perpus_role = form.perpus_role.data
         if user.is_superadmin():
             unit_id = form.unit_id.data
+        
+        role = staff.get_unit_role()
+        if user.is_kajur or user.is_superadmin() or user.perpus_role == perpus_code.DIREKTUR:
+            role = form.role.data
 
         staff_update = Staff.update(
             staff_id=staff_id,
             npk=form.npk.data,
             nama=form.nama.data,
-            role=form.role.data,
+            role=role,
             unit_id=unit_id,
             perpus_role=perpus_role
         )
