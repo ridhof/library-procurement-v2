@@ -29,7 +29,7 @@ def login():
             session['user_id'] = staff.id
             session['user_name'] = staff.nama
             flash("Anda berhasil masuk", flash_code.SUCCESS)
-            return redirect(url_for('dashboard.dashboard'))
+            return redirect(url_for('unit.table'))
         else:
             flash("NPK/Password anda tidak sesuai", flash_code.DANGER)
         # Register Purposes
