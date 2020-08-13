@@ -16,15 +16,18 @@ def do_clustering(clustering_id, peminjamans, url):
             distinct_peminjamans.append(peminjaman)
     vectorize = Vectorize(juduls)
     clustering = Clustering(datas=vectorize.vectors, features=vectorize.features, is_scale=True)
+    print(clustering)
     
     peminjaman_by_cluster = {}
     for label in clustering.labels:
         peminjaman_by_cluster[label] = []
+    print(peminjaman_by_cluster)
 
     for peminjaman_idx in range(len(distinct_peminjamans)):
         label = clustering.labels[peminjaman_idx]
         distinct_peminjamans[peminjaman_idx]['label'] = label
         peminjaman_by_cluster[label].append(distinct_peminjamans[peminjaman_idx])
+    print(peminjaman_by_cluster)
         
     for cluster in peminjaman_by_cluster:
         payload = {
