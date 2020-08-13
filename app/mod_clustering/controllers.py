@@ -27,8 +27,13 @@ def table():
         bulan = prev_month.month
         if len(f"{bulan}") == 1:
             bulan = f"0{bulan}"
-        peminjamans = Peminjaman.get_peminjaman(periode=f"{prev_month.year}-{bulan}")
-        clustering = Clustering(prev_month.month, prev_month.year)
+        tahun = prev_month.year
+
+        if request.args.get("bulan") and request.args.get("tahun"):
+            bulan = request.args.get("bulan")
+            tahun = request.args.get("tahun")
+        peminjamans = Peminjaman.get_peminjaman(periode=f"{tahun}-{bulan}")
+        clustering = Clustering(int(bulan), int(tahun))
         print(clustering.cluster(peminjamans))
     else:
         is_detail = request.form['is_detail']
