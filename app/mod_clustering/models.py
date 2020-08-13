@@ -27,15 +27,18 @@ class Clustering(Base):
             peminjaman_process = []
             for peminjaman in peminjamans:
                 if peminjaman.status != peminjaman_code.KEMBALI:
-                    peminjaman_process.append({
-                        'peminjaman_id': peminjaman.id,
-                        'tanggal_pinjam': peminjaman.get_tanggal(),
-                        'buku_id': peminjaman.buku_id,
-                        'buku_title': peminjaman.get_buku(is_preprocessed=True),
-                        'peminjam': peminjaman.get_pemustaka()
-                    })
+                    buku_title = peminjaman.get_buku(is_preprocessed=True)
+                    if buku_title != '':
+                        peminjaman_process.append({
+                            'peminjaman_id': peminjaman.id,
+                            'tanggal_pinjam': peminjaman.get_tanggal(),
+                            'buku_id': peminjaman.buku_id,
+                            'buku_title': buku_title,
+                            'peminjam': peminjaman.get_pemustaka()
+                        })
             db.session.add(self)
             db.session.commit()
+            print(f"{len(peminjaman_process)} akan diolah pada Clustering")
             task = rqueue.enqueue(
                 do_clustering,
                 self.id,
@@ -43,7 +46,8 @@ class Clustering(Base):
                 url_for('clustering.table')
             )
             return True
-        except:
+        except Exception:
+            print(Exception)
             return False
 
     def find(clustering_id):
