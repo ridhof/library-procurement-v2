@@ -11,10 +11,21 @@ class Clustering():
     dicts = {}
 
     def __init__(self, datas, features, is_scale=False):
+        print("Initiating Clustering")
         self.set_data(datas, is_scale)
+        print(f"Transforming data: {self.datas}")
+
+        print("Calculating Optimal N")
         self.calculate_n()
+        print("Optimal N: {self.n_clusters}")
+
+        print("Calculating Clustering using Optimal N")
         self.labels = self.clustering()
+        print("Cluster labels acquired: {labels}")
+
+        print("Transforming Clustering Result")
         self.cluster_vector(datas, features)
+        print("Transformed Clustering Result Acquired: {self.dicts}")
 
     def set_data(self, datas, is_scale):
         self.datas = np.array(datas)
@@ -26,9 +37,13 @@ class Clustering():
     def calculate_n(self):
         max_silhouette = 0
         max_index = 0
-        for i in range(2, len(self.datas)):
+
+        max_looping = int(len(self.datas) / 2)
+        print(f"Looping for {max_looping}")
+        for i in range(2, max_looping, 30):
             labels = self.clustering(i)
             silhouette = silhouette_score(self.datas, labels, metric='euclidean')
+            print(f"Index {i} with silhouette {silhouette}")
             if silhouette > max_silhouette:
                 max_silhouette = silhouette
                 max_index = i
