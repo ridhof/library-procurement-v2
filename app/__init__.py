@@ -17,7 +17,7 @@ HANDLE_USER_EXCEPTION = APP.handle_user_exception
 DB = SQLAlchemy(APP)
 
 REDIS = redis.Redis()
-REDIS_QUEUE = Queue(connection=REDIS)
+REDIS_QUEUE = Queue(connection=REDIS, default_timeout=6000)
 
 def _custom_abort(http_status_code, **kwargs):
     if http_status_code == 400:
