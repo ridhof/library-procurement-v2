@@ -47,12 +47,15 @@ class Peminjaman(Base):
         return Buku.regcomp_available(reg_comp)
 
     def get_buku(self, is_preprocessed=False):
-        buku = Buku.query.filter_by(id=self.buku_id, is_delete=0).first()
-        result = buku.judul
-        if is_preprocessed:
-            preprocessed_dewey = buku.get_dewey(is_preprocessed=True)
-            result = f"{preprocessed_dewey} {buku.preprocessed_judul}"
-        return result
+        try:
+            buku = Buku.query.filter_by(id=self.buku_id, is_delete=0).first()
+            result = buku.judul
+            if is_preprocessed:
+                preprocessed_dewey = buku.get_dewey(is_preprocessed=True)
+                result = f"{preprocessed_dewey} {buku.preprocessed_judul}"
+            return result
+        except:
+            return ''
 
     def set_pemustaka(self, kode_pemustaka):
         staff = Staff.query.filter_by(npk=kode_pemustaka, is_delete=0).first()
