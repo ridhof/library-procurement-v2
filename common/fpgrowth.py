@@ -14,11 +14,22 @@ class FPGrowth():
     association_rules = []
 
     def __init__(self, transactions):
+        print("Initiating FP Growth Process")
         self.reset()
+
+        print("Setting up the Transactions")
         self.set_transactions(transactions)
+
+        print("Calculating Support")
         self.calculate_support()
+
+        print("Calculating Confidence")
         self.calculate_confidence()
+
+        print("Calculating Lift")
         self.calculate_lift()
+
+        print("Setting up the Association Rules")
         self.set_association_rules()
 
     def calculate_min_sup(transaction_length):
@@ -34,8 +45,7 @@ class FPGrowth():
 
     def calculate_support(self):
         min_support = FPGrowth.calculate_min_sup(len(self.transactions))
-        fp_growth = fpgrowth(self.transactions_df,
-                             min_support=min_support, use_colnames=True)
+        fp_growth = fpgrowth(self.transactions_df,min_support=min_support, use_colnames=True)
         for row in fp_growth.values.tolist():
             support = row[0]
             row_itemsets = row[1]
@@ -43,20 +53,24 @@ class FPGrowth():
             self.itemsets.append([item for item in row_itemsets])
 
     def calculate_confidence(self):
+        print(f"Itemsets: {self.itemsets}")
         for association_index in range(len(self.itemsets)):
             if len(self.itemsets[association_index]) > 1:
-                itemsets = self.itemsets
-                association_itemsets = itemsets[association_index]
-                correlated_itemset = association_itemsets[-1]
-                main_itemset = association_itemsets[:-1]
+                try:
+                    itemsets = self.itemsets
+                    association_itemsets = itemsets[association_index]
+                    correlated_itemset = association_itemsets[-1]
+                    main_itemset = association_itemsets[:-1]
 
-                correlated_index = itemsets.index(association_itemsets)
-                main_index = itemsets.index(main_itemset)
+                    correlated_index = itemsets.index(association_itemsets)
+                    main_index = itemsets.index(main_itemset)
 
-                supports = self.supports
-                confidence = supports[correlated_index] / supports[main_index]
+                    supports = self.supports
+                    confidence = supports[correlated_index] / supports[main_index]
 
-                self.confidences[association_index] = confidence
+                    self.confidences[association_index] = confidence
+                except:
+                    print("Terjadi kesalahan pada proses perhitungan Confidence")
 
     def calculate_lift(self):
         for confidence_index in self.confidences:
