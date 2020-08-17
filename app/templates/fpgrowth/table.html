@@ -42,8 +42,8 @@
         <tbody>
           {% for fpgrowth in fpgrowths %}  
           <tr>
-            <td>{{ fpgrowth.get_cluster_dict(fpgrowth.main_itemset) }}</td>
-            <td>{{ fpgrowth.get_cluster_dict(fpgrowth.correlated_itemset) }}</td>
+            <td>{{ fpgrowth.get_cluster_dict(fpgrowth.main_itemset, is_display=True) }}</td>
+            <td>{{ fpgrowth.get_cluster_dict(fpgrowth.correlated_itemset, is_display=True) }}</td>
             <td>{{ fpgrowth.confidence_value }}</td>
           </tr>
           {% endfor %}
