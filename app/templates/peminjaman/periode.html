@@ -8,6 +8,16 @@
 
 {% block content_title %}Peminjaman{% endblock %}
 
+{% block button_insert %}
+{% if user.is_pustakawan() %}
+<div>
+  <a href="{{ url_for('peminjaman.create', periode=periode_sekarang) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    <i class="fas fa-plus fa-sm text-white-50"></i> Tambahkan Data Baru
+  </a>
+</div>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
