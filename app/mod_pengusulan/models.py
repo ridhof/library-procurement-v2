@@ -8,6 +8,7 @@ from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
 from app.mod_pengusulan.tasks import preprocess_pengusulan, count_similarity
 from app.models import Base
 from app.mod_auth.models import Staff
+from app.mod_unit.models import Unit
 from app.mod_matakuliah.models import Matakuliah
 from app.mod_referensi.models import Referensi
 from app.mod_rps.models import Rps
@@ -58,6 +59,17 @@ class Pengusulan(Base):
         staff = Staff.query.filter_by(id=self.pengusul_id).first()
         return f"{ staff.npk } - { staff.nama }"
 
+    def display_unit_pengusul(self):
+        staff = Staff.query.filter_by(id=self.pengusul_id).first()
+        unit = Unit.query.filter_by(id=staff.unit_id).first()
+        return f"{unit.nama}"
+
+    def get_all(status=pengusulan_code.DIUSULKAN):
+        pengusulans = Pengusulan.query.filter_by(is_delete=0).all()
+        if status == pengusulan_code.DIUSULKAN:
+            pengusulans = Pengusulan.query.filter_by(status=status, is_delete=0).all()
+        return pengusulans
+    
     def get_by_unit(unit_id, status=pengusulan_code.DIUSULKAN):
         staffs = Staff.query.filter_by(unit_id=unit_id, is_delete=0).all()
         pengusulans = []
