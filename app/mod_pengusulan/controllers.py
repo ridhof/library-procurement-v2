@@ -23,7 +23,8 @@ def table():
         return redirect(url_for('auth.login'))
 
     pengusulans = Pengusulan.get_by_staff(user.id)
-    return render_template("pengusulan/table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, user=user)
+    ranks = Pengusulan.calculate_averages(pengusulans)
+    return render_template("pengusulan/table.html", pengusulans=pengusulans, ranks=ranks, pengusulan_code=pengusulan_code, user=user)
 
 @MOD_PENGUSULAN.route('analisa/', methods=['GET'])
 def analyze():
@@ -35,7 +36,8 @@ def analyze():
         return redirect(url_for('auth.login'))
 
     pengusulans = Pengusulan.get_all()
-    return render_template("pengusulan/analisa-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=pengusulan_code.DIUSULKAN)
+    ranks = Pengusulan.calculate_averages(pengusulans)
+    return render_template("pengusulan/analisa-table.html", pengusulans=pengusulans, ranks=ranks, pengusulan_code=pengusulan_code, status=pengusulan_code.DIUSULKAN)
 
 @MOD_PENGUSULAN.route('analisa/semua', methods=['GET'])
 def analyze_all():
@@ -47,7 +49,8 @@ def analyze_all():
         return redirect(url_for('auth.login'))
 
     pengusulans = Pengusulan.get_all(status=None)
-    return render_template("pengusulan/analisa-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=None)
+    ranks = Pengusulan.calculate_averages(pengusulans)
+    return render_template("pengusulan/analisa-table.html", pengusulans=pengusulans, ranks=ranks, pengusulan_code=pengusulan_code, status=None)
 
 @MOD_PENGUSULAN.route('kelola/', methods=['GET'])
 def manage():
@@ -62,7 +65,8 @@ def manage():
         return redirect(url_for('pengusulan.table'))
 
     pengusulans = Pengusulan.get_by_unit(user.unit_id)
-    return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=pengusulan_code.DIUSULKAN)
+    ranks = Pengusulan.calculate_averages(pengusulans)
+    return render_template("pengusulan/kelola-table.html", ranks=ranks, pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=pengusulan_code.DIUSULKAN)
 
 @MOD_PENGUSULAN.route('kelola/semua', methods=['GET'])
 def manage_all():
@@ -80,7 +84,8 @@ def manage_all():
         unit_id=user.unit_id,
         status=None
     )
-    return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=None)
+    ranks = Pengusulan.calculate_averages(pengusulans)
+    return render_template("pengusulan/kelola-table.html", pengusulans=pengusulans, ranks=ranks, pengusulan_code=pengusulan_code, status=None)
 
 @MOD_PENGUSULAN.route('<pengusulan_id>/relevansi')
 def relevansi(pengusulan_id):
