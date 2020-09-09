@@ -46,6 +46,24 @@ class Pengusulan(Base):
     def __repr__(self):
         return '<Pengusulan %r>' % (self.id)
 
+    def calculate_averages(pengusulans):
+        averages = []
+        for pengusulan in pengusulans:
+            relevansis = Relevansi.get_by_pengusulan(pengusulan.id)
+            if relevansis is None or len(relevansis) == 0:
+                averages.append(0)
+            else:
+                distances = []
+                for relevansi in relevansis:
+                    if relevansi is not None and relevansi.nilai_distance is not None:
+                        distances.append(relevansi.nilai_distance)
+                average = 0
+                if len(distances) != 0:
+                    average = sum(distances) / len(distances)
+                averages.append(average)
+        ranks = sorted(range(len(averages)), key=lambda k: averages[k], reverse=True)
+        return ranks
+    
     def display_status(self):
         if self.status == pengusulan_code.DIUSULKAN:
             return 'Menunggu Verifikasi Kepala Unit'

@@ -37,6 +37,7 @@
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
           <tr>
+            <th>Rank</th>
             <th>Tanggal</th>
             <th>Pengarang</th>
             <th>Judul</th>
@@ -46,6 +47,7 @@
         </thead>
         <tfoot>
           <tr>
+            <th>Rank</th>
             <th>Tanggal</th>
             <th>Pengarang</th>
             <th>Judul</th>
@@ -56,14 +58,17 @@
         <tbody>
           {% for pengusulan in pengusulans %}  
           <tr>
-            <td>{{ pengusulan.tanggal_pengusulan.strftime("%Y/%m/%d %H:%M:%S") }}</td>
-            <td>{{ pengusulan.pengarang }}</td>
-            <td>{{ pengusulan.judul }}</td>
-            <td>{{ pengusulan.display_status() }}</td>
+            {% set rank_index = ranks[loop.index - 1] %}
+            <td>{{ loop.index }}</td>
+            {% set pengusulan_ranked = pengusulans[rank_index] %}
+            <td>{{ pengusulan_ranked.tanggal_pengusulan.strftime("%Y/%m/%d %H:%M:%S") }}</td>
+            <td>{{ pengusulan_ranked.pengarang }}</td>
+            <td>{{ pengusulan_ranked.judul }}</td>
+            <td>{{ pengusulan_ranked.display_status() }}</td>
             <td>
-                <a href="{{ url_for('pengusulan.relevansi', pengusulan_id=pengusulan.id) }}" class="btn btn-primary btn-user btn-block">Matakuliah</a>
+                <a href="{{ url_for('pengusulan.relevansi', pengusulan_id=pengusulan_ranked.id) }}" class="btn btn-primary btn-user btn-block">Matakuliah</a>
                 {% if pengusulan.status == pengusulan_code.DIUSULKAN %}
-                <a href="{{ url_for('pengusulan.delete', pengusulan_id=pengusulan.id) }}" class="btn btn-danger btn-user btn-block">Batalkan</button>
+                <a href="{{ url_for('pengusulan.delete', pengusulan_id=pengusulan_ranked.id) }}" class="btn btn-danger btn-user btn-block">Batalkan</button>
                 {% endif %}
             </td>
           </tr>
@@ -82,5 +87,5 @@
 <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 <!-- Page level custom scripts -->
-<script src="{{ url_for('static', filename='js/demo/datatables/first-index-desc.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demo/datatables/second-index-desc.js') }}"></script>
 {% endblock %}
