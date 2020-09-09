@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Tabel Pengusulan{% endblock %}
+
+{% block style_libs %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content_title %}Pengusulan{% endblock %}
+
+{% block button_insert %}
+<div>
+  <a href="{{ url_for('pengusulan.table') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+    &larr; Kembali ke Tabel Pengusulan
+  </a>
+
+  {% if status == pengusulan_code.DIUSULKAN %}
+  <a href="{{ url_for('pengusulan.analyze_all') }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Semua Pengusulan Unit Lain
+  </a>
+  {% elif status == None %}
+  <a href="{{ url_for('pengusulan.analyze') }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Pengusulan Unit Lain
+  </a>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Tabel Pengusulan</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Pengarang</th>
+              <th>Judul</th>
+              <th>Pengusul</th>
+              <th>Asal Unit</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th>Tanggal</th>
+              <th>Pengarang</th>
+              <th>Judul</th>
+              <th>Pengusul</th>
+              <th>Asal Unit</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            {% for pengusulan in pengusulans %}  
+            <tr>
+              <td>{{ pengusulan.tanggal_pengusulan.strftime("%Y/%m/%d %H:%M:%S") }}</td>
+              <td>{{ pengusulan.pengarang }}</td>
+              <td>{{ pengusulan.judul }}</td>
+              <td>{{ pengusulan.display_pengusul() }}</td>
+              <td>{{ pengusulan.display_unit_pengusul() }}</td>
+              <td>{{ pengusulan.display_status() }}</td>
+              <td>
+                  <a href="{{ url_for('pengusulan.relevansi', pengusulan_id=pengusulan.id) }}" class="btn btn-primary btn-user btn-block">Matakuliah</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid -->
+{% endblock %}

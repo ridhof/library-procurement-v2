@@ -10,6 +10,11 @@
 
 {% block button_insert %}
 <div>
+  {% if user.is_pustakawan() %}
+  <a href="{{ url_for('pengusulan.analyze') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Pengusulan Unit Lain
+  </a>
+  {% endif %}
   {% if user.get_unit_role() != 'staff' %}
   <a href="{{ url_for('pengusulan.manage') }}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
     <i class="fas fa-cog fa-sm text-white-50"></i> Kelola Pengusulan Unit

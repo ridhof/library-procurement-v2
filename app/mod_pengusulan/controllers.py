@@ -25,6 +25,30 @@ def table():
     pengusulans = Pengusulan.get_by_staff(user.id)
     return render_template("pengusulan/table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, user=user)
 
+@MOD_PENGUSULAN.route('analisa/', methods=['GET'])
+def analyze():
+    """
+    Return Pengusulan Table Page From Other Unit
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    pengusulans = Pengusulan.get_all()
+    return render_template("pengusulan/analisa-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=pengusulan_code.DIUSULKAN)
+
+@MOD_PENGUSULAN.route('analisa/semua', methods=['GET'])
+def analyze_all():
+    """
+    Return All Pengusulan Table Page From Other Unit
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+
+    pengusulans = Pengusulan.get_all(status=None)
+    return render_template("pengusulan/analisa-table.html", pengusulans=pengusulans, pengusulan_code=pengusulan_code, status=None)
+
 @MOD_PENGUSULAN.route('kelola/', methods=['GET'])
 def manage():
     """
