@@ -5,7 +5,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.mod_auth.models import Staff
 from app.mod_peminjaman.models import Peminjaman
-from app.mod_peminjaman.forms import PeminjamanForm
+from app.mod_peminjaman.forms import PeminjamanForm, get_datetime
 
 from common import flash_code, peminjaman_code
 
@@ -21,7 +21,9 @@ def periode():
         return redirect(url_for('auth.login'))
 
     periodes = Peminjaman.get_periode()
-    return render_template("peminjaman/periode.html", periodes=periodes)
+    now = get_datetime().split('-')
+    periode_sekarang = f"{now[0]}-{now[1]}"
+    return render_template("peminjaman/periode.html", periodes=periodes, user=user, periode_sekarang=periode_sekarang)
 
 @MOD_PEMINJAMAN.route('<periode>/', methods=['GET'])
 def table(periode):
