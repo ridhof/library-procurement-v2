@@ -4,12 +4,13 @@ Peminjaman Class
 from flask import url_for
 import datetime
 from datetime import timedelta
-from app import DB as db
+from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
 from app.models import Base
 from app.mod_buku.models import Buku
 from app.mod_auth.models import Staff
 from app.mod_mahasiswa.models import Mahasiswa
 from app.mod_unit.models import Unit
+from app.mod_peminjaman.tasks import read_excel
 from common import flash_code, perpus_code
 
 
@@ -38,6 +39,18 @@ class Peminjaman(Base):
 
     def __repr__(self):
         return '<Peminjaman %r>' % (self.id)
+
+    def import_excel(path, sheet_index):
+        try:
+            task = rqueue.enqueue(
+                read_excel,
+                path,
+                sheet_index,
+                url_for('peminjaman.store')
+            )
+            return True
+        except:
+            return False
 
     def set_buku(self, reg_comp):
         buku = Buku.query.filter_by(reg_comp=reg_comp, is_delete=0).first()
