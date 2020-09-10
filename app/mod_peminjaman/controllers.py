@@ -5,7 +5,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.mod_auth.models import Staff
 from app.mod_peminjaman.models import Peminjaman
-from app.mod_peminjaman.forms import PeminjamanForm, get_datetime
+from app.mod_peminjaman.forms import FileForm, PeminjamanForm, get_datetime
 
 from common import flash_code, peminjaman_code
 
@@ -71,6 +71,32 @@ def create(periode):
             flash(f"Gagal menambahkan data, terjadi kesalahan", flash_code.DANGER)
     form.verified_by.data = user.id
     return render_template("peminjaman/form.html", form=form, page_title="Tambah Peminjaman Baru", peminjaman_code=peminjaman_code, periode=periode)
+
+@MOD_PEMINJAMAN.route('<periode>/import', methods=['GET', 'POST'])
+def import_excel(periode):
+    """
+    Return Import Page
+    """
+    user = Staff.is_login()
+    if user is None:
+        return redirect(url_for('auth.login'))
+    
+    form = FileForm()
+    if form.validate_on_submit():
+        file_type = form.file_transaksi.data.filename.split('.')[1]
+        if file_type == 'xlsx' or file_type == 'xls':
+            filename = form.file_transaksi.data.filename
+            path = './app/static/files/uploads/' + filename
+            form.file_transaksi.data.save(path)
+            sheet_index = 0
+            
+            if Peminjaman.import_excel(path, sheet_index):
+                flash(f"File berhasil ditambahkan", flash_code.SUCCESS)
+            else:
+                flash(f"Proses import data gagal", flash_code.DANGER)
+        else:
+            flash(f"File yang diupload dimohon menggunakan format .xls ataupun .xlsx", flash_code.WARNING)
+    return render_template("peminjaman/file-form.html", form=form, page_title="Impor Data Peminjaman", periode=periode)
 
 @MOD_PEMINJAMAN.route('<periode>/<peminjaman_id>/hapus', methods=['GET'])
 def delete(periode, peminjaman_id):
