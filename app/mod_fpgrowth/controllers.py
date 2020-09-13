@@ -22,7 +22,7 @@ def table():
         if clusterings is not None:
             tahun = clusterings.tahun
             bulan = clusterings.bulan
-            if len(f"{bulan}"):
+            if len(f"{bulan}") == 1:
                 bulan = f"0{bulan}"
             peminjamans = Peminjaman.get_peminjaman(periode=f"{tahun}-{bulan}")
             peminjamans_dicts = []
