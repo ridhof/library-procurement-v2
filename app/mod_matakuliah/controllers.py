@@ -75,7 +75,7 @@ def update(matakuliah_id, matakuliah_kode):
     if form.validate_on_submit():
         if matakuliah.kode != form.kode.data:
             if Matakuliah.query.filter_by(kode=form.kode.data, is_delete=0).first() is not None:
-                flash(f"Matakuliah dengan kode { new_kode } sudah digunakan", flash_code.WARNING)
+                flash(f"Matakuliah dengan kode { form.kode.data } sudah digunakan", flash_code.WARNING)
                 form = MatakuliahForm(
                     data={
                         'matakuliah_id': matakuliah_id,
@@ -88,7 +88,7 @@ def update(matakuliah_id, matakuliah_kode):
                         'kurikulum': form.kurikulum.data
                     }
                 )
-                return render_template("matakuliah/form.html", form=form, page_title="Ubah Matakuliah")
+                return render_template("matakuliah/form.html", form=form, page_title="Ubah Matakuliah", user=user)
         
         matakuliah_update = Matakuliah.update(
             matakuliah_id=matakuliah_id,
