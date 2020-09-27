@@ -3,5 +3,4 @@
 .vscode/
 migrations/
 venv/
-vendor/
 __pycache__/
