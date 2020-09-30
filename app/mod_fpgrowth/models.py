@@ -60,7 +60,7 @@ class FrequentPatternGrowth(Base):
                         correlate = fpgrowth.get_cluster_dict(fpgrowth.correlated_itemset)
                         itemset = f"{main} {correlate}"
                         itemset_reverse = f"{correlate} {main}"
-                        if itemset not in itemsets and itemset_reverse not in itemsets:
+                        if itemset not in itemsets and itemset_reverse not in itemsets and itemset != itemset_reverse:
                             itemsets.append(itemset)
                             fpgrowths_result.append(fpgrowth)
                     [print(f"Itemset ({associate.get_cluster_dict(associate.main_itemset)}, {associate.get_cluster_dict(associate.correlated_itemset)}). Support {associate.support_value}. Confidence {associate.confidence_value}. Lift {associate.lift_value}") for associate in fpgrowths_result]
