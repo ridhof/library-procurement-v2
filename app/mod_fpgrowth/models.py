@@ -2,6 +2,7 @@
 FPGrowth Class
 """
 from flask import url_for
+import operator
 from app import DB as db, REDIS as redis, REDIS_QUEUE as rqueue
 from app.models import Base
 from app.mod_clustering.models import Clustering, ClusteringDetail, PeminjamanClustering
@@ -63,8 +64,9 @@ class FrequentPatternGrowth(Base):
                         if itemset not in itemsets and itemset_reverse not in itemsets and itemset != itemset_reverse:
                             itemsets.append(itemset)
                             fpgrowths_result.append(fpgrowth)
-                    [print(f"Itemset ({associate.get_cluster_dict(associate.main_itemset)}, {associate.get_cluster_dict(associate.correlated_itemset)}). Support {associate.support_value}. Confidence {associate.confidence_value}. Lift {associate.lift_value}") for associate in fpgrowths_result]
-                    return fpgrowths_result
+                    fpgrowths_result_sorted = sorted(fpgrowths_result, key=operator.attrgetter('confidence_value'), reverse=True)
+                    [print(f"Itemset ({associate.get_cluster_dict(associate.main_itemset)}, {associate.get_cluster_dict(associate.correlated_itemset)}). Support {associate.support_value}. Confidence {associate.confidence_value}. Lift {associate.lift_value}") for associate in fpgrowths_result_sorted]
+                    return fpgrowths_result_sorted
             return []
         except:
             return []
