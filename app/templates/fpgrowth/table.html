@@ -27,24 +27,24 @@
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
           <tr>
+            <th>Rank</th>
             <th>Cluster Buku Utama</th>
             <th>Cluster Buku Terkait</th>
-            <th>Confidence Value</th>
           </tr>
         </thead>
         <tfoot>
           <tr>
+            <th>Rank</th>
             <th>Cluster Buku Utama</th>
             <th>Cluster Buku Terkait</th>
-            <th>Confidence Value</th>
           </tr>
         </tfoot>
         <tbody>
           {% for fpgrowth in fpgrowths %}  
           <tr>
+            <td>{{ loop.index }}</td>
             <td>{{ fpgrowth.get_cluster_dict(fpgrowth.main_itemset, is_display=True) }}</td>
             <td>{{ fpgrowth.get_cluster_dict(fpgrowth.correlated_itemset, is_display=True) }}</td>
-            <td>{{ fpgrowth.confidence_value }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -61,5 +61,5 @@
 <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 <!-- Page level custom scripts -->
-<script src="{{ url_for('static', filename='js/demo/datatables/order-by-hiddens.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demo/datatables/first-index-asc.js') }}"></script>
 {% endblock %}

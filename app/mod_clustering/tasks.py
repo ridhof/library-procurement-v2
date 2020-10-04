@@ -48,5 +48,5 @@ def do_clustering(clustering_id, peminjamans, url):
             r = requests.post(f"{config.SERVER_URL}{url}", data=payload)
             print(f"{r.status_code}: {r.text}")
 
-        fpgrowth_request = requests.get(f"{config.SERVER_URL}/fpgrowth/?clustering_id={clustering_id}")
-        print(f"FPGrowth Request {fpgrowth_request.status_code}: {fpgrowth_request.text}")
+    fpgrowth_request = requests.get(f"{config.SERVER_URL}/fpgrowth/?clustering_id={clustering_id}")
+    print(f"FPGrowth Request {fpgrowth_request.status_code}: {fpgrowth_request.text}")
