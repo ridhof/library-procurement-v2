@@ -43,7 +43,7 @@ class Clustering():
             max_looping = 100
         print(f"Looping for {max_looping}")
 
-        for i in range(2, max_looping, 1):
+        for i in range(20, max_looping, 1):
             labels = self.clustering(i)
             silhouette = silhouette_score(self.datas, labels, metric='euclidean')
             print(f"Index {i} with silhouette {silhouette}")
