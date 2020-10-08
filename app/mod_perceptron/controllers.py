@@ -1,7 +1,8 @@
 """
 Perceptron Module's Controllers
 """
-from flask import Blueprint, request
+from flask import Blueprint, redirect, render_template, request, url_for
+from app.mod_auth.models import Staff
 from app.mod_clustering.models import Clustering, PeminjamanClustering
 from app.mod_peminjaman.models import Peminjaman
 from app.mod_perceptron.models import Perceptron
@@ -38,6 +39,14 @@ def table():
                     })
             print(Perceptron.helper(peminjamans_dicts))
             return f"Perceptron Trigger Enabled!"
+        else:
+            user = Staff.is_login()
+            if user is None:
+                return redirect(url_for('auth.login'))
+            
+            periode = request.args.get('periode')
+            perceptrons = Perceptron.get(periode=periode)
+            return render_template("perceptron/table.html", perceptrons=perceptrons, periode=periode)
     else:
         cluster_id = request.form['cluster_id']
         priority_value = request.form['priority_value']
