@@ -18,9 +18,12 @@
   <a href="{{ url_for('fpgrowth.table') }}?periode={{periode}}" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
     <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Asosiasi Peminjaman
   </a>
-  <a href="{{ url_for('perceptron.table') }}?periode={{periode}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-    <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Topik Peminjaman
+  <a target="_blank" href="{{ url_for('clustering.export_csv', periode=periode) }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Export CSV
   </a>
+  <!-- <a href="{{ url_for('perceptron.table') }}?periode={{periode}}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+    <i class="fas fa-cog fa-sm text-white-50"></i> Tampilkan Topik Peminjaman
+  </a> -->
 </div>
 {% endblock %}
 
