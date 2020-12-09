@@ -1,6 +1,7 @@
 .env
 
 .vscode/
+app/static/files/*.csv
 migrations/
 venv/
 __pycache__/
