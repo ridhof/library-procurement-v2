@@ -3,10 +3,12 @@ Clustering Module's Controllers
 """
 from flask import Blueprint, request
 from datetime import datetime
+import pandas as pd
 from app.mod_peminjaman.models import Peminjaman
 from app.mod_clustering.models import Clustering, ClusteringDetail, PeminjamanClustering
 
 from common import flash_code
+from common.fpgrowth import FPGrowth
 
 MOD_CLUSTERING = Blueprint('clustering', __name__, url_prefix='/clustering/')
 
@@ -62,3 +64,73 @@ def table():
         else:
             print("Clustering tidak dapat ditemukan")
     return f"{today.year}/{today.month}: {flash_code.SUCCESS}"
+
+@MOD_CLUSTERING.route('<periode>/csv', methods=['GET', 'POST'])
+def export_csv(periode):
+    """
+    Return CSV file
+    """
+    tahun = int(periode.split('-')[0])
+    bulan = int(periode.split('-')[1])
+
+    clustering_id = Clustering.find_id(bulan=bulan, tahun=tahun)
+    clusterings = Clustering.find(clustering_id)
+    if clusterings is not None:
+        tahun = clusterings.tahun
+        bulan = clusterings.bulan
+        if len(f"{ bulan }") == 1:
+            bulan = f"0{ bulan }"
+        peminjamans = Peminjaman.get_peminjaman(periode=f"{tahun}-{bulan}")
+        peminjaman_dicts = []
+        for peminjaman in peminjamans:
+            pemustaka = peminjaman.get_pemustaka()
+            tanggal_pinjam = peminjaman.get_tanggal()
+            buku_id = peminjaman.buku_id
+            peminjaman_clustering_id = PeminjamanClustering.get_id(buku_id, clustering_id)
+            if peminjaman_clustering_id is not None:
+                peminjaman_clustering = PeminjamanClustering.find(peminjaman_clustering_id)
+                clustering_detail = ClusteringDetail.find_by_id(peminjaman_clustering.clustering_detail_id)
+                peminjaman_dicts.append({
+                    'pemustaka': pemustaka,
+                    'tanggal_pinjam': tanggal_pinjam,
+                    'peminjaman_clustering_id': clustering_detail.cluster_dict
+                })
+        
+        transactions = []
+        tanggal_looping = peminjaman_dicts[0]['tanggal_pinjam']
+        pemustaka_looping = peminjaman_dicts[0]['pemustaka']
+        pemustaka_transaction = []
+        for peminjaman in peminjaman_dicts:
+            pemustaka = peminjaman['pemustaka']
+            tanggal_pinjam = peminjaman['tanggal_pinjam']
+            peminjaman_clustering_id = peminjaman['peminjaman_clustering_id']
+
+            if tanggal_pinjam == tanggal_looping and pemustaka == pemustaka_looping:
+                if peminjaman_clustering_id not in pemustaka_transaction:
+                    pemustaka_transaction.append(peminjaman_clustering_id)
+            else:
+                transactions.append(pemustaka_transaction)
+                tanggal_looping = tanggal_pinjam
+                pemustaka_looping = pemustaka
+                pemustaka_transaction = [peminjaman_clustering_id]
+        transactions.append(pemustaka_transaction)
+        
+        fpgrowth = FPGrowth(transactions)
+        csv_data = []
+
+        title = ['Transaksi']
+        title.extend(fpgrowth.transactions_df.columns.to_numpy().tolist())
+        index = 1
+        for transaction in fpgrowth.transactions_df.to_numpy().tolist():
+            row = [f"{index}"]
+            for item in transaction:
+                value = '?'
+                if item == True:
+                    value = 'Y'
+                row.append(value)
+            csv_data.append(row)
+            index = index + 1
+        csv_df = pd.DataFrame(data=csv_data, columns=title)
+        csv_df.to_csv(f"./app/static/files/{periode}.csv", index=False)
+        return f"{csv_df}"
+    return f"Hello World! {periode}"
